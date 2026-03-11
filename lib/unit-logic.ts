@@ -34,6 +34,18 @@ export const UnitRegistry: Record<UnitCategory, { base: string, units: UnitDefin
       { label: 'Fahrenheit (°F)', value: 'fahrenheit', formula: (v, toBase) => toBase ? (v - 32) * 5/9 : (v * 9/5) + 32 },
       { label: 'Kelvin (K)', value: 'kelvin', formula: (v, toBase) => toBase ? v - 273.15 : v + 273.15 },
     ]
+  },
+  area: {
+    base: 'square_meter',
+    units: [
+      { label: 'Square Meters (m²)', value: 'square_meter', ratio: 1 },
+      { label: 'Square Kilometers (km²)', value: 'square_km', ratio: 1000000 },
+      { label: 'Square Feet (ft²)', value: 'square_ft', ratio: 0.092903 },
+      { label: 'Square Inches (in²)', value: 'square_in', ratio: 0.00064516 },
+      { label: 'Square Miles (mi²)', value: 'square_mi', ratio: 2589988 },
+      { label: 'Hectares (ha)', value: 'hectare', ratio: 10000 },
+      { label: 'Acres (ac)', value: 'acre', ratio: 4046.86 },
+    ]
   }
 };
 
