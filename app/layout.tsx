@@ -42,8 +42,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
           </div>
   
           <div className="hidden md:flex gap-6 text-sm font-medium text-slate-600">
-            <Link href="/finance" className="hover:text-blue-600">Finance</Link>
-            <Link href="/units" className="hover:text-blue-600">Unit Converter</Link>
+            <Link href="/finance" className="hover:text-blue-600 transition-colors">Finance</Link>
+            <Link href="/units" className="hover:text-blue-600 transition-colors">Units</Link>
+            <Link href="/engineering" className="hover:text-amber-600 transition-colors">Engineering</Link>
+            <Link href="/health" className="hover:text-rose-600 transition-colors">Health</Link>
           </div>          
         </nav>
         </header>
