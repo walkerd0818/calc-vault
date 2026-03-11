@@ -46,6 +46,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <Link href="/units" className="hover:text-blue-600 transition-colors">Units</Link>
             <Link href="/engineering" className="hover:text-amber-600 transition-colors">Engineering</Link>
             <Link href="/health" className="hover:text-rose-600 transition-colors">Health</Link>
+            <Link href="/legal" className="hover:text-purple-600 transition-colors">Legal</Link>
           </div>          
         </nav>
         </header>
