@@ -15,6 +15,27 @@ export const AllCalculators: CalculatorMetadata[] = [
     keywords: ['home', 'loan', 'house', 'interest', 'amortization', 'payment']
   },
   {
+    id: 'refinance',
+    name: 'Mortgage Refinance Calculator',
+    category: 'Finance',
+    href: '/finance/refinance-calculator',
+    keywords: ['refinance', 'mortgage', 'savings', 'interest rate', 'break-even']
+  },
+  {
+    id: 'heloc',
+    name: 'HELOC Calculator',
+    category: 'Finance',
+    href: '/finance/heloc-calculator',
+    keywords: ['heloc', 'home equity', 'credit', 'line of credit', 'borrowing']
+  },
+  {
+    id: 'investment-roi',
+    name: 'Investment & Crypto ROI Calculator',
+    category: 'Finance',
+    href: '/finance/investment-roi',
+    keywords: ['crypto', 'bitcoin', 'ethereum', 'roi', 'return on investment', 'trading', 'capital gains', 'tax', 'investment', 'stock']
+  },
+  {
     id: 'loan-amortization',
     name: 'Loan Amortization Calculator',
     category: 'Finance',
@@ -90,5 +111,19 @@ export const AllCalculators: CalculatorMetadata[] = [
     category: 'Tools',
     href: '/tools/date-calc',
     keywords: ['date', 'days', 'weeks', 'months', 'years', 'time']
+  },
+  {
+    id: 'settlement',
+    name: 'Personal Injury Settlement Calculator',
+    category: 'Legal',
+    href: '/legal/settlement',
+    keywords: ['settlement', 'personal injury', 'car accident', 'claim', 'damages', 'lawsuit', 'injury compensation']
+  },
+  {
+    id: 'workers-comp',
+    name: 'Workers Compensation & Disability Calculator',
+    category: 'Legal',
+    href: '/legal/workers-comp',
+    keywords: ['workers comp', 'disability', 'workers compensation', 'benefits', 'ttd', 'ppd', 'injury']
   },
 ];

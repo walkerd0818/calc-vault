@@ -6,6 +6,9 @@ import { TrendingUp, ChevronRight } from 'lucide-react';
 
 const financeCalculators = [
   { name: 'Mortgage Calculator', href: '/finance/mortgage-calculator', description: 'Calculate monthly mortgage payments and view amortization schedule' },
+  { name: 'Mortgage Refinance', href: '/finance/refinance-calculator', description: 'Determine if refinancing is worth it and calculate savings' },
+  { name: 'HELOC Calculator', href: '/finance/heloc-calculator', description: 'Calculate available home equity and HELOC payments' },
+  { name: 'Investment & Crypto ROI', href: '/finance/investment-roi', description: 'Calculate investment returns and capital gains tax liability' },
   { name: 'Loan Amortization', href: '/finance/loan-calculator', description: 'Create amortization schedules for various loans' },
   { name: 'Interest Calculator', href: '/finance/interest', description: 'Calculate simple and compound interest' },
 ];
