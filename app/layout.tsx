@@ -1,31 +1,48 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import React from 'react';
+import './globals.css'; // Ensure your Tailwind styles are imported
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// 1. Define the Interface for the Props
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
+// 2. Add Metadata for SEO
+export const metadata = {
   title: 'CalcVault | Professional Online Calculators',
-  description: 'Free finance, math, and unit conversion calculators.',
+  description: 'Hundreds of free finance, math, and unit conversion calculators.',
 };
 
-export default function RootLayout({ children }) {
+// 3. Apply the Type to the Function Component
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <head>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" />
+        {/* Placeholder for Google AdSense - Only loads in production */}
+        {process.env.NODE_ENV === 'production' && (
+          <script 
+            async 
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ID" 
+            crossOrigin="anonymous" 
+          />
+        )}
       </head>
-      <body className="bg-slate-50 text-slate-900">
-        <header>...</header>
-        <main>{children}</main>
+      <body className="antialiased bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+        <header className="border-b bg-white p-4 shadow-sm">
+          <nav className="max-w-7xl mx-auto flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-blue-600">CalcVault</h1>
+            {/* Search and Category Links go here */}
+          </nav>
+        </header>
+
+        <main className="flex-grow max-w-7xl mx-auto w-full p-6">
+          {children}
+        </main>
+
+        <footer className="bg-slate-800 text-white p-8 mt-12">
+          <div className="max-w-7xl mx-auto text-center">
+            <p>&copy; {new Date().getFullYear()} CalcVault - All Rights Reserved.</p>
+          </div>
+        </footer>
       </body>
     </html>
   );
