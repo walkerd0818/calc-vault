@@ -22,11 +22,14 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head>
         {/* Placeholder for Google AdSense - Only loads in production */}
         {process.env.NODE_ENV === 'production' && (
-          <script 
-            async 
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ID" 
-            crossOrigin="anonymous" 
-          />
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7513014543018596"
+                crossOrigin="anonymous">
+          </script>      
+          // <script 
+          //   async 
+          //   src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ID" 
+          //   crossOrigin="anonymous" 
+          // />
         )}
       </head>
       <body className="antialiased bg-slate-50 text-slate-900 min-h-screen flex flex-col">
