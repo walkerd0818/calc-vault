@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import SearchBar from '@components/SearchBar';
 import './globals.css'; // Ensure your Tailwind styles are imported
 
@@ -34,7 +35,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <h1 className="text-2xl font-bold text-blue-600">CalcVault</h1> */}
         <nav className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <Link href="/" className="flex items-center gap-2 text-2xl font-black text-blue-600 tracking-tighter">
-            <img src="/SyntixGear.png" alt="SyntixGear" width={32} height={32} />
+            <Image src="/SyntixGear.png" alt="SyntixGear" width={32} height={32} />
             CALC<span className="text-slate-800">VAULT</span>
           </Link>
   
