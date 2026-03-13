@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
 import { 
@@ -10,7 +8,6 @@ import {
   ChevronRight, 
   ShieldCheck 
 } from 'lucide-react';
-import SearchBar from '@components/SearchBar';
 
 // Categories organized for the professional grid
 const categories = [
@@ -42,9 +39,9 @@ const categories = [
     icon: <Zap className="text-amber-600" size={24} />,
     color: 'bg-amber-50',
     links: [
-      { name: 'Scientific Calculator', href: '/math/scientific' },
-      { name: 'Percentage Calc', href: '/math/percentage' },
-      { name: 'Area & Volume', href: '/math/geometry' },
+      { name: 'Scientific Calculator', href: '/engineering/scientific' },
+      { name: 'Percentage Calc', href: '/engineering/percentage' },
+      { name: 'Area & Volume', href: '/engineering/geometry' },
     ]
   },
   {
@@ -71,9 +68,6 @@ export default function HomePage() {
         <p className="text-lg text-slate-500 max-w-2xl mx-auto mb-10">
           Access hundreds of free, professional-grade calculators. Fast, accurate, and ready for work or personal use.
         </p>
-        <div className="max-w-2xl mx-auto">
-          <SearchBar />
-        </div>
       </section>
 
       {/* 2. Top Ad Slot */}

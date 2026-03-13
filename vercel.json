@@ -1,8 +1,9 @@
 {
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/calc-vault/:path*",
-      "destination": "/:path*"
+      "source": "/",
+      "destination": "/calc-vault",
+      "permanent": false
     }
   ]
 }
