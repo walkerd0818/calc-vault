@@ -23,9 +23,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
         {/* Placeholder for Google AdSense - Only loads in production */}
         {process.env.NODE_ENV === 'production' && (
           <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7513014543018596"
-                crossOrigin="anonymous">
-          </script>      
-          // <script 
+     crossOrigin="anonymous">
+      
+     </script>          // <script 
           //   async 
           //   src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ID" 
           //   crossOrigin="anonymous" 
