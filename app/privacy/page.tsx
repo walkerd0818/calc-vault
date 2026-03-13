@@ -24,8 +24,9 @@ export default function PrivacyPolicy() {
             about goods and services of interest to you.
           </p>
           <ul className="list-disc ml-6 mt-2 space-y-1">
-            <li>Google, as a third-party vendor, uses cookies to serve ads on this site.</li>
-            <li>Google's use of the DART cookie enables it to serve ads based on your visit to this site and other sites on the Internet.</li>
+            <li>Google, as a third-party vendor, uses cookies to serve ads on syntixgear.com.</li>
+            <li>Google's use of the advertising cookies enables it and its partners to serve ads to our users visit to this site and our sites and/or other sites on the Internet.</li>
+            <li>Users may opt out of personalized advertising by visiting <a href="https://www.google.com/search?q=https://www.google.com/settings/ads" target="_blank" style={{ color: 'blue', textDecoration: 'underline' }} rel="noopener noreferrer">Google AdSense Settings</a>. Alternatively, you can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info" target="_blank" style={{ color: 'blue', textDecoration: 'underline' }} rel="noopener noreferrer">www.aboutads.info</a>.</li>
           </ul>
         </div>
 
