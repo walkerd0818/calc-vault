@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/calc-vault/:path*",
+      "destination": "/:path*"
+    }
+  ]
+}
