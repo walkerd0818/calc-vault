@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import SearchBar from '@components/SearchBar';
+import { Analytics } from "@vercel/analytics/next";
 import './globals.css'; // Ensure your Tailwind styles are imported
 
 // 1. Define the Interface for the Props
@@ -22,10 +23,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head>
         {/* Placeholder for Google AdSense - Only loads in production */}
         {process.env.NODE_ENV === 'production' && (
-          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7513014543018596"
-     crossOrigin="anonymous">
-      
-     </script>          // <script 
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7513014543018596" crossOrigin="anonymous">
+          </script>          // <script 
           //   async 
           //   src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ID" 
           //   crossOrigin="anonymous" 
@@ -58,6 +57,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
         <main className="flex-grow max-w-7xl mx-auto w-full p-6">
           {children}
+          <Analytics />
         </main>
 
         <footer className="bg-slate-900 text-slate-400 py-12 mt-20 border-t border-slate-800">
