@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import SearchBar from '@components/SearchBar';
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css'; // Ensure your Tailwind styles are imported
 
 // 1. Define the Interface for the Props
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <main className="flex-grow max-w-7xl mx-auto w-full p-6">
           {children}
           <Analytics />
+          <SpeedInsights />
         </main>
 
         <footer className="bg-slate-900 text-slate-400 py-12 mt-20 border-t border-slate-800">
