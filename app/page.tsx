@@ -42,9 +42,9 @@ const categories = [
     icon: <Zap className="text-amber-600" size={24} />,
     color: 'bg-amber-50',
     links: [
-      { name: 'Scientific Calculator', href: '/math/scientific' },
-      { name: 'Percentage Calc', href: '/math/percentage' },
-      { name: 'Area & Volume', href: '/math/geometry' },
+      { name: 'Scientific Calculator', href: '/engineering/scientific' },
+      { name: 'Percentage Calc', href: '/engineering/percentage' },
+      { name: 'Area & Volume', href: '/engineering/geometry' },
     ]
   },
   {
