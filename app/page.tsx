@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
   TrendingUp, 
@@ -61,6 +61,9 @@ const categories = [
 ];
 
 export default function HomePage() {
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [requestSubmitted, setRequestSubmitted] = useState(false);
+
   return (
     <div className="space-y-16 pb-20">
       {/* 1. Hero Section */}
@@ -122,10 +125,112 @@ export default function HomePage() {
         <p className="text-slate-400 mb-8 max-w-md mx-auto">
           We are constantly adding new tools to CalcVault. Suggest a new calculator and we'll build it.
         </p>
-        <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold transition">
+        <button 
+        className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold transition"
+            onClick={() => setShowRequestModal(true)}
+>
           Request a Calculator
         </button>
       </section>
+
+
+  {/* Request Modal */}
+  {showRequestModal && (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl relative">
+        <button
+          className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl font-bold"
+          onClick={() => {
+            setShowRequestModal(false);
+            setRequestSubmitted(false);
+          }}
+        >
+        </button>
+
+        {requestSubmitted ? (
+          /* Confirmation screen */
+          <div className="text-center py-6">
+            <div className="text-5xl mb-4">🎉</div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Thanks!</h2>
+            <p className="text-slate-500 mb-8">We received your request and will get to work on it.</p>
+            <button
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-full transition"
+              onClick={() => {
+                setShowRequestModal(false);
+                setRequestSubmitted(false);
+              }}
+            >
+              Close
+            </button>
+          </div>
+        ) : (
+        /* Request form */
+          <>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Request a Calculator</h2>
+            <p className="text-slate-500 text-sm mb-6">Tell us what you need and we'll build it.</p>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                const email = (form.elements.namedItem('email') as HTMLInputElement).value;
+                const description = (form.elements.namedItem('description') as HTMLTextAreaElement).value;
+
+                await fetch('https://formsubmit.co/ajax/walkerd0818@gmail.com', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                  body: JSON.stringify({
+                    email,
+                    description,
+                    _subject: 'New Calculator Request from CalcVault',
+                 }),
+                });
+
+                setRequestSubmitted(true);
+              }}
+            >
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-slate-700 mb-1">Your Email</label>
+              <input
+                name="email"
+                type="email"
+                required
+                placeholder="you@example.com"
+                className="w-full border border-slate-300 rounded-lg px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-slate-700 mb-1">Describe the Calculator</label>
+              <textarea
+                name="description"
+                required
+                rows={4}
+                placeholder="e.g. A mortgage amortization calculator with extra payment support..."
+                className="w-full border border-slate-300 rounded-lg px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-full transition"
+            >
+              Submit Request
+            </button>
+            <button
+              type="button"
+              className="w-full mt-3 text-slate-500 hover:text-slate-700 font-semibold py-2 transition"
+              onClick={() => {
+                setShowRequestModal(false);
+                setRequestSubmitted(false);
+              }}
+            >
+              Cancel
+            </button>
+          </form>
+        </>
+      )}
     </div>
+  </div>
+)}
+</div>
   );
 }
