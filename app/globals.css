@@ -24,3 +24,43 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.syntix-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 20px;
+  background: #020608;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.08);
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.syntix-breadcrumb-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+.syntix-breadcrumb-link:hover { opacity: 0.8; }
+
+.syntix-breadcrumb-bracket {
+  color: rgba(0, 229, 255, 0.35);
+  font-size: 0.75rem;
+}
+
+.syntix-breadcrumb-brand {
+  color: rgba(0, 229, 255, 0.7);
+}
+
+.syntix-breadcrumb-sep {
+  color: rgba(0, 229, 255, 0.2);
+  font-size: 0.7rem;
+}
+
+.syntix-breadcrumb-current {
+  color: rgba(255, 255, 255, 0.3);
+}
