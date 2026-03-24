@@ -2,7 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  reactCompiler: true,
+  basePath: "/calc-vault", 
+  trailingSlash: false, // Optional: Adds a trailing slash to all routes 
 };
 
-export default nextConfig;
+module.exports = nextConfig;
+// export default nextConfig;
+
