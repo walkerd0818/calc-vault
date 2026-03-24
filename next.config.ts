@@ -5,5 +5,6 @@ const nextConfig: NextConfig = {
   basePath: "/calc-vault",  
 };
 
-export default nextConfig;
+module.exports = nextConfig;
+// export default nextConfig;
 

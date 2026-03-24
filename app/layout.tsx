@@ -12,7 +12,6 @@ interface RootLayoutProps {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://syntixgear.com/calc-vault'),
   title: 'CalcVault | Professional Online Calculators',
   description: 'Hundreds of free finance, math, and unit conversion calculators.',
 };
