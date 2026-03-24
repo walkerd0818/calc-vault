@@ -5,12 +5,14 @@ import SearchBar from '@components/SearchBar';
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
+import { Metadata } from 'next';
 
 interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-export const metadata = {
+export const metadata: Metadata = {
+  metadataBase: new URL('https://syntixgear.com/calc-vault'),
   title: 'CalcVault | Professional Online Calculators',
   description: 'Hundreds of free finance, math, and unit conversion calculators.',
 };
