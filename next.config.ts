@@ -2,7 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  reactCompiler: true,
+  basePath: "/calc-vault",  
 };
 
 export default nextConfig;
+
