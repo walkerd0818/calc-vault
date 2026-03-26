@@ -4,6 +4,7 @@ import Image from 'next/image';
 import SearchBar from '@components/SearchBar';
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import Script from 'next/script';
 import './globals.css';
 import { Metadata } from 'next';
 
@@ -29,6 +30,19 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )}
       </head>
       <body className="antialiased bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-8D7R5BJNH9"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-8D7R5BJNH9');
+          `}
+        </Script>
 
         {/* ── SyntixGear breadcrumb ── */}
         <div className="syntix-breadcrumb">
