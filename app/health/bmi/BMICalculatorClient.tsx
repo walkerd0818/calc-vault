@@ -39,7 +39,7 @@ export default function BMICalculator() {
           href="/health" 
           className="inline-block px-4 py-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors font-medium"
         >
-          ← Health Hub
+          ← Wellness Hub
         </Link>
         <Link 
           href="/health/calories" 
