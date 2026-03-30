@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { 
   TrendingUp, 
   Ruler, 
-  Zap, 
+  Zap,
+  Gavel, 
   ShieldCheck,
   ChevronRight, 
   MousePointer2,
@@ -24,6 +25,17 @@ const categories = [
       { name: 'Mortgage Calculator', href: '/finance/mortgage-calculator' },
       { name: 'Loan Amortization',   href: '/finance/loan-calculator' },
       { name: 'Interest Calculator', href: '/finance/interest' },
+    ],
+  },
+    {
+    title: 'Legal & Settlement',
+    description: 'Estimate potential claim values and understand your legal rights.',
+    icon: <Gavel className="text-purple-600" size={24} />,
+    color: 'bg-purple-50',
+    links: [
+      { name: "Workers' Comp", href: '/legal/workers-comp' },
+      { name: 'Personal Injury Settlement', href: '/legal/settlement' },
+      { name: 'Wrongful Termination', href: '/legal/wrongful-termination' },
     ],
   },
   {
