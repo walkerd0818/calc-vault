@@ -104,6 +104,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
               <h4 className="text-white font-bold mb-2">Legal</h4>
               <Link href="/about"   className="hover:text-white transition">About Us</Link>
               <Link href="/privacy" className="hover:text-white transition">Privacy Policy</Link>
+              <Link href="/terms-of-service" className="hover:text-white transition">Terms of Service</Link>
             </div>
           </div>
         </footer>
