@@ -32,7 +32,7 @@ export default function LegalPage() {
       <section className="mb-12 pt-6">
         <div className="flex items-center gap-3 mb-4">
           <Scale className="text-purple-600" size={32} />
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Legal Claims Terminal</h1>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Legal Claims Hub</h1>
         </div>
         <p className="text-lg text-slate-600 leading-relaxed max-w-2xl">
           Data-driven utilities for estimating <strong>damages, settlements, and statutory benefits</strong>. 
