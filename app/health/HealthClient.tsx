@@ -26,7 +26,7 @@ export default function HealthPage() {
       <section className="mb-12 pt-6">
         <div className="flex items-center gap-3 mb-4">
           <ShieldCheck className="text-rose-600" size={32} />
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Wellness Terminal</h1>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Wellness Hub</h1>
         </div>
         <p className="text-lg text-slate-600 leading-relaxed max-w-2xl">
           Science-based utilities for <strong>fitness tracking</strong>, <strong>nutritional planning</strong>, 
@@ -97,7 +97,7 @@ export default function HealthPage() {
             // wellness_protocol_v1.0 //
           </h3>
           <p className="text-sm mb-6 opacity-80 leading-relaxed">
-            Our wellness terminal focuses on the primary pillars of metabolic tracking. 
+            Our wellness hub focuses on the primary pillars of metabolic tracking. 
             By identifying your baseline metrics, you can make more informed decisions 
             regarding nutrition and physical activity.
           </p>
