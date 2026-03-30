@@ -2,6 +2,13 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { Info, 
+         HelpCircle, 
+         CheckCircle2, 
+         AlertTriangle, 
+         ArrowRightLeft, 
+         Landmark, 
+         RefreshCw } from 'lucide-react';
 
 export default function RefinanceCalculator() {
   const [currentLoanAmount, setCurrentLoanAmount] = useState(300000);
@@ -45,199 +52,158 @@ export default function RefinanceCalculator() {
       monthsToBreakEven,
       yearsToBreakEven,
       totalSavings,
-      isWorthIt: totalSavings > 0 && monthsToBreakEven < newTerm * 12 - monthsPaid,
+      isWorthIt: totalSavings > 0 && monthsToBreakEven < (newTerm * 12 - monthsPaid),
     };
   }, [originalPayment, newPayment, closingCosts, monthsPaid, newTerm]);
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Navigation Links */}
-      <div className="mb-6 flex gap-4">
-        <Link 
-          href="/finance" 
-          className="inline-block px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors font-medium"
-        >
-          ← Back to Finance
+    <div className="max-w-4xl mx-auto px-4 pb-20">
+      {/* Navigation */}
+      <nav className="mb-8 flex gap-4 pt-6">
+        <Link href="/finance" className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-all font-bold text-sm">
+          ← Finance Hub
         </Link>
-        <Link 
-          href="/finance/mortgage-calculator" 
-          className="inline-block px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors font-medium"
-        >
+        <Link href="/finance/mortgage-calculator" className="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-all font-bold text-sm">
           Mortgage Calculator
         </Link>
-      </div>
+      </nav>
 
-      {/* Introduction */}
-      <section className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Mortgage Refinance Calculator</h1>
-        <p className="text-slate-600">
-          Determine if refinancing your mortgage is the right financial decision. Calculate break-even points and potential savings.
+      {/* Header */}
+      <header className="mb-10">
+        <h1 className="text-4xl font-black text-slate-900 mb-4 tracking-tight flex items-center gap-3">
+          <ArrowRightLeft className="text-blue-600" size={36} />
+          Mortgage Refinance Calculator
+        </h1>
+        <p className="text-lg text-slate-600 leading-relaxed max-w-3xl">
+          Should you refinance? Use our precision tool to calculate your <strong>break-even point</strong> and see how much 
+          a lower interest rate could save you over the remaining life of your loan.
         </p>
-      </section>
+      </header>
 
       {/* Ad Slot - Top */}
-      <div className="w-full h-24 bg-slate-100 mb-8 flex items-center justify-center border-dashed border-2 border-slate-300">
-        <span className="text-slate-400 text-xs">Advertisement</span>
+      <div className="w-full h-24 bg-slate-50 mb-10 flex flex-col items-center justify-center border border-slate-100 rounded-xl">
+        <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Sponsored Advertisement</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
         {/* Current Loan Details */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h2 className="text-lg font-semibold mb-4">Current Loan</h2>
-          <div className="space-y-4">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+          <h2 className="text-xl font-bold mb-6 text-slate-800 flex items-center gap-2">
+            <Landmark size={20} className="text-slate-400" /> Current Loan
+          </h2>
+          <div className="space-y-5">
             <div>
-              <label className="block text-sm font-medium mb-1">Original Loan Amount ($)</label>
-              <input 
-                type="number" 
-                value={currentLoanAmount} 
-                onChange={(e) => setCurrentLoanAmount(Number(e.target.value))}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-              />
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Original Loan Amount ($)</label>
+              <input type="number" value={currentLoanAmount} onChange={(e) => setCurrentLoanAmount(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none transition-all font-medium" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Rate (%)</label>
+                <input type="number" step="0.1" value={currentRate} onChange={(e) => setCurrentRate(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none transition-all font-medium" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Term (Yrs)</label>
+                <select value={currentTerm} onChange={(e) => setCurrentTerm(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none transition-all font-medium bg-white">
+                  <option value={15}>15 Years</option>
+                  <option value={30}>30 Years</option>
+                </select>
+              </div>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Current Interest Rate (%)</label>
-              <input 
-                type="number" step="0.1"
-                value={currentRate} 
-                onChange={(e) => setCurrentRate(Number(e.target.value))}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Original Loan Term (Years)</label>
-              <select 
-                value={currentTerm} 
-                onChange={(e) => setCurrentTerm(Number(e.target.value))}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-              >
-                <option value={15}>15 Years</option>
-                <option value={30}>30 Years</option>
-                <option value={10}>10 Years</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Months Paid</label>
-              <input 
-                type="number" 
-                value={monthsPaid}
-                onChange={(e) => setMonthsPaid(Math.min(Number(e.target.value), currentTerm * 12))}
-                max={currentTerm * 12}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-              />
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Months Already Paid</label>
+              <input type="number" value={monthsPaid} onChange={(e) => setMonthsPaid(Math.min(Number(e.target.value), currentTerm * 12))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none transition-all font-medium" />
             </div>
           </div>
         </div>
 
         {/* Refinance Details */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h2 className="text-lg font-semibold mb-4">Refinance Plan</h2>
-          <div className="space-y-4">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+          <h2 className="text-xl font-bold mb-6 text-slate-800 flex items-center gap-2">
+            <RefreshCw size={20} className="text-blue-600" /> New Plan
+          </h2>
+          <div className="space-y-5">
             <div>
-              <label className="block text-sm font-medium mb-1">New Interest Rate (%)</label>
-              <input 
-                type="number" step="0.1"
-                value={newRate} 
-                onChange={(e) => setNewRate(Number(e.target.value))}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-              />
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-2">New Interest Rate (%)</label>
+              <input type="number" step="0.1" value={newRate} onChange={(e) => setNewRate(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none transition-all font-medium" />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">New Loan Term (Years)</label>
-              <select 
-                value={newTerm} 
-                onChange={(e) => setNewTerm(Number(e.target.value))}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-              >
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-2">New Loan Term</label>
+              <select value={newTerm} onChange={(e) => setNewTerm(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none transition-all font-medium bg-white">
                 <option value={15}>15 Years</option>
                 <option value={20}>20 Years</option>
-                <option value={25}>25 Years</option>
                 <option value={30}>30 Years</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Closing Costs ($)</label>
-              <input 
-                type="number" 
-                value={closingCosts}
-                onChange={(e) => setClosingCosts(Number(e.target.value))}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-              />
-              <p className="text-xs text-slate-500 mt-1">Typically 2-5% of loan amount</p>
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Estimated Closing Costs ($)</label>
+              <input type="number" value={closingCosts} onChange={(e) => setClosingCosts(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none transition-all font-medium" />
+              <p className="text-[10px] text-slate-400 mt-2 italic font-mono">Typically 2% - 5% of loan amount</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Analysis Results */}
-      <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 p-6 rounded-xl border-2 ${
-        analysis.isWorthIt 
-          ? 'bg-emerald-50 border-emerald-200' 
-          : 'bg-orange-50 border-orange-200'
-      }`}>
-        <div>
-          <h3 className="font-semibold text-slate-900 mb-3">Monthly Savings</h3>
-          <div className={`text-4xl font-bold ${analysis.monthlyPaymentSavings > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-            ${Math.abs(analysis.monthlyPaymentSavings).toLocaleString(undefined, { maximumFractionDigits: 0 })}
-          </div>
-          <p className="text-sm text-slate-600 mt-1">
-            Current: ${originalPayment.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-          </p>
-          <p className="text-sm text-slate-600">
-            New: ${newPayment.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-          </p>
-        </div>
-
-        <div>
-          <h3 className="font-semibold text-slate-900 mb-3">Break-Even Analysis</h3>
-          {analysis.monthlyPaymentSavings > 0 ? (
-            <>
-              <div className="text-3xl font-bold text-amber-600 mb-2">
-                {analysis.yearsToBreakEven.toLocaleString(undefined, { maximumFractionDigits: 1 })} years
-              </div>
-              <p className="text-sm text-slate-600">
-                ~{analysis.monthsToBreakEven} months to recover closing costs
-              </p>
-            </>
-          ) : (
-            <div className="text-sm text-slate-600">
-              High interest rate - refinancing may not be beneficial
+      {/* Results Analysis */}
+      <section className={`p-8 rounded-2xl border-2 mb-12 ${analysis.isWorthIt ? 'bg-emerald-50 border-emerald-200' : 'bg-orange-50 border-orange-200'}`}>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-2">Monthly Savings</h3>
+            <div className={`text-5xl font-black ${analysis.monthlyPaymentSavings > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+              ${Math.abs(analysis.monthlyPaymentSavings).toLocaleString(undefined, { maximumFractionDigits: 0 })}
             </div>
-          )}
-        </div>
-      </div>
-
-      {/* Total Savings */}
-      <div className="bg-blue-50 border border-blue-200 p-6 rounded-xl">
-        <h3 className="font-semibold text-slate-900 mb-3">Total Savings Over Loan Life</h3>
-        <div className={`text-3xl font-bold ${analysis.totalSavings > 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-          ${analysis.totalSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-        </div>
-        <p className="text-sm text-slate-600 mt-2">
-          {analysis.isWorthIt 
-            ? '✓ Refinancing appears to be a good financial decision'
-            : '✗ Consider if refinancing makes sense for your situation'
-          }
-        </p>
-      </div>
-
-      {/* Information Section */}
-      <section className="mt-12 bg-slate-50 p-8 rounded-xl border border-slate-200">
-        <h2 className="text-xl font-semibold mb-4 text-slate-900">Understanding Refinancing</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-700">
-          <div>
-            <h3 className="font-semibold text-slate-900 mb-2">What is Refinancing?</h3>
-            <p>
-              Refinancing means replacing your existing mortgage with a new loan, usually at a different interest rate or term. It can help you save money or change your payment schedule.
-            </p>
           </div>
-          <div>
-            <h3 className="font-semibold text-slate-900 mb-2">Break-Even Point</h3>
-            <p>
-              The break-even point is when your monthly savings equal the closing costs you pay. If you plan to stay in the home longer than this point, refinancing typically makes sense.
-            </p>
+          <div className="bg-white/50 p-4 rounded-xl border border-white/80">
+            <h3 className="text-xs font-bold text-slate-500 uppercase mb-2 tracking-tighter">Break-Even Point</h3>
+            <div className="text-2xl font-bold text-slate-800">{analysis.yearsToBreakEven.toFixed(1)} Years</div>
+            <p className="text-[10px] text-slate-400 mt-1 uppercase tracking-widest italic font-bold font-mono">Status: {analysis.isWorthIt ? 'POSITIVE_ROI' : 'NEGATIVE_ROI'}</p>
           </div>
         </div>
       </section>
+
+      {/* EDUCATIONAL CONTENT: AdSense Booster */}
+      <section className="prose prose-slate max-w-none mb-16 space-y-12">
+        <div className="bg-slate-900 text-white p-8 rounded-2xl">
+          <h2 className="text-white text-2xl font-bold flex items-center gap-2 mb-6">
+            <Info size={24} className="text-blue-400" /> Understanding Refinance Economics
+          </h2>
+          <div className="grid md:grid-cols-2 gap-8 text-slate-300 text-sm leading-relaxed">
+            <div>
+              <h4 className="text-blue-400 font-bold mb-2 uppercase text-xs">The Break-Even Principle</h4>
+              <p>Refinancing isn't just about a lower rate; it's about the time it takes for your monthly savings to cover the upfront <strong>closing costs</strong>. If you plan to sell your home before reaching the break-even point, a refinance may actually cost you more than it saves.</p>
+            </div>
+            <div>
+              <h4 className="text-blue-400 font-bold mb-2 uppercase text-xs">Term Extension Risks</h4>
+              <p>Be cautious when resetting a 30-year mortgage if you have already paid into your current one for several years. Extending the term may lower your payment, but you could end up paying significantly more in <strong>total interest</strong> over the long run.</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 mb-6">
+            <HelpCircle size={24} className="text-blue-600" /> Refinance Checklist
+          </h2>
+          <ul className="grid md:grid-cols-2 gap-4 list-none p-0">
+            <li className="flex gap-3 bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-sm text-slate-600 leading-snug">
+              <CheckCircle2 className="text-emerald-500 shrink-0" size={20} />
+              Verify your current credit score to ensure you qualify for the lowest advertised rates.
+            </li>
+            <li className="flex gap-3 bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-sm text-slate-600 leading-snug">
+              <CheckCircle2 className="text-emerald-500 shrink-0" size={20} />
+              Factor in appraisal fees, title insurance, and lender origination charges.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      {/* Mandatory Disclaimer */}
+      <footer className="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-xl">
+        <div className="flex gap-4">
+          <AlertTriangle className="text-amber-600 shrink-0" size={24} />
+          <p className="text-xs text-amber-800 leading-relaxed font-medium">
+            <strong>Financial Disclosure:</strong> Mortgage refinance outcomes vary based on creditworthiness, property equity, and fluctuating market rates. CalcVault provides these estimates for educational purposes only. This is not a commitment to lend. Always consult with a licensed mortgage professional or certified financial planner before finalizing any loan agreement.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
