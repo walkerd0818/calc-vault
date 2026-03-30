@@ -53,7 +53,6 @@ const categories = [
     links: [
       { name: 'BMI Calculator', href: '/health/bmi' },
       { name: 'Calorie Needs',  href: '/health/calories' },
-      { name: 'Date to Date',   href: '/tools/date-calc' },
     ],
   },
 ];
