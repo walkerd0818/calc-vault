@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { Activity, Info, ShieldCheck, Heart, Zap, BookOpen } from 'lucide-react';
 
 type Gender = 'male' | 'female';
 type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'veryActive';
@@ -22,9 +23,7 @@ export default function CalorieCalculator() {
   };
 
   const calories = useMemo(() => {
-    // Mifflin-St Jeor Equation
     let bmr: number;
-    
     if (gender === 'male') {
       bmr = 10 * weight + 6.25 * height - 5 * age + 5;
     } else {
@@ -32,169 +31,179 @@ export default function CalorieCalculator() {
     }
 
     const tdee = bmr * activityMultipliers[activityLevel].multiplier;
-    const weightLoss = tdee - 500;
-    const weightGain = tdee + 300;
-
     return {
       bmr: Math.round(bmr),
       tdee: Math.round(tdee),
-      weightLoss: Math.round(weightLoss),
-      weightGain: Math.round(weightGain),
+      weightLoss: Math.round(tdee - 500),
+      weightGain: Math.round(tdee + 300),
     };
   }, [gender, age, weight, height, activityLevel]);
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-5xl mx-auto px-4 pb-20">
       {/* Navigation */}
-      <div className="mb-6 flex gap-4">
+      <nav className="mb-8 flex flex-wrap gap-3 pt-6">
         <Link 
           href="/health" 
-          className="inline-block px-4 py-2 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-100 transition-colors font-medium"
+          className="inline-block px-4 py-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors font-medium"
         >
-          ← Back to Health
+          ← Health Hub
         </Link>
+        <Link 
+          href="/health/bmi" 
+          className="inline-block px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors font-medium"
+        >
+          BMI Calculator
+        </Link>
+      </nav>
+
+      {/* Header */}
+      <header className="mb-10">
+        <h1 className="text-4xl font-black text-slate-900 mb-4 tracking-tight flex items-center gap-3">
+          <Activity className="text-rose-600" size={36} />
+          Calorie & TDEE Calculator
+        </h1>
+        <p className="text-lg text-slate-600 leading-relaxed max-w-3xl">
+          Estimate your <strong>Total Daily Energy Expenditure (TDEE)</strong> using the 
+          <strong> Mifflin-St Jeor Equation</strong>. Calculate the calories required for maintenance, 
+          weight loss, or muscle gain based on your specific activity profile.
+        </p>
+      </header>
+
+      {/* Ad Slot - Top */}
+      <div className="w-full h-24 bg-slate-50 mb-10 flex flex-col items-center justify-center border border-slate-100 rounded-xl">
+        <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Sponsored Advertisement</span>
       </div>
 
-      <section className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Calorie Needs Calculator</h1>
-        <p className="text-slate-600">Estimate your daily calorie requirements based on your lifestyle and fitness goals.</p>
-      </section>
-
-      {/* Ad Slot */}
-      <div className="w-full h-24 bg-slate-100 mb-8 flex items-center justify-center border-dashed border-2 border-slate-300">
-        <span className="text-slate-400 text-xs">Advertisement</span>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
         {/* Inputs */}
-        <div className="md:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h2 className="font-semibold mb-4 text-slate-900">Your Information</h2>
-          <div className="space-y-4">
+        <div className="lg:col-span-4 bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+          <h2 className="text-xl font-bold mb-6 text-slate-800 flex items-center gap-2 uppercase tracking-tighter">
+            <Info size={20} className="text-rose-600" /> Biometrics
+          </h2>
+          <div className="space-y-5">
             <div>
-              <label className="block text-sm font-medium mb-2">Gender</label>
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Gender</label>
               <div className="flex gap-2">
-                <button
-                  onClick={() => setGender('male')}
-                  className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all ${
-                    gender === 'male'
-                      ? 'bg-rose-600 text-white'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  Male
-                </button>
-                <button
-                  onClick={() => setGender('female')}
-                  className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all ${
-                    gender === 'female'
-                      ? 'bg-rose-600 text-white'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  Female
-                </button>
+                {['male', 'female'].map((g) => (
+                  <button key={g} onClick={() => setGender(g as Gender)} className={`flex-1 py-2 rounded-xl font-bold capitalize transition-all ${gender === g ? 'bg-rose-600 text-white shadow-lg' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+                    {g}
+                  </button>
+                ))}
               </div>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Age</label>
-              <input 
-                type="number"
-                value={age}
-                onChange={(e) => setAge(Number(e.target.value))}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-rose-500 outline-none"
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Age</label>
+                <input type="number" value={age} onChange={(e) => setAge(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-rose-500 outline-none transition-all font-medium" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Weight (kg)</label>
+                <input type="number" value={weight} onChange={(e) => setWeight(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-rose-500 outline-none transition-all font-medium" />
+              </div>
             </div>
-
             <div>
-              <label className="block text-sm font-medium mb-1">Weight (kg)</label>
-              <input 
-                type="number"
-                value={weight}
-                onChange={(e) => setWeight(Number(e.target.value))}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-rose-500 outline-none"
-              />
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Height (cm)</label>
+              <input type="number" value={height} onChange={(e) => setHeight(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-rose-500 outline-none transition-all font-medium" />
             </div>
-
             <div>
-              <label className="block text-sm font-medium mb-1">Height (cm)</label>
-              <input 
-                type="number"
-                value={height}
-                onChange={(e) => setHeight(Number(e.target.value))}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-rose-500 outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Activity Level</label>
-              <select 
-                value={activityLevel}
-                onChange={(e) => setActivityLevel(e.target.value as ActivityLevel)}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-rose-500 outline-none text-sm"
-              >
-                <option value="sedentary">Sedentary (Little/No Exercise)</option>
-                <option value="light">Light (1-3 days/week)</option>
-                <option value="moderate">Moderate (3-5 days/week)</option>
-                <option value="active">Active (6-7 days/week)</option>
-                <option value="veryActive">Very Active (Intense Daily)</option>
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Activity Level</label>
+              <select value={activityLevel} onChange={(e) => setActivityLevel(e.target.value as ActivityLevel)} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-rose-500 outline-none transition-all font-medium bg-white">
+                <option value="sedentary">Sedentary</option>
+                <option value="light">Lightly Active</option>
+                <option value="moderate">Moderately Active</option>
+                <option value="active">Very Active</option>
+                <option value="veryActive">Extra Active</option>
               </select>
-              <p className="text-xs text-slate-500 mt-1">{activityMultipliers[activityLevel].description}</p>
             </div>
           </div>
         </div>
 
         {/* Results */}
-        <div className="md:col-span-2 space-y-4">
-          {/* BMR */}
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border border-blue-200">
-            <h3 className="font-semibold text-slate-900 mb-2">Basal Metabolic Rate (BMR)</h3>
-            <div className="text-3xl font-bold text-blue-600 mb-1">{calories.bmr} cal/day</div>
-            <p className="text-xs text-slate-600">Calories burned at rest</p>
-          </div>
-
-          {/* TDEE */}
-          <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-xl border border-emerald-200">
-            <h3 className="font-semibold text-slate-900 mb-2">Total Daily Energy Expenditure (TDEE)</h3>
-            <div className="text-3xl font-bold text-emerald-600 mb-1">{calories.tdee} cal/day</div>
-            <p className="text-xs text-slate-600">Calories burned with activity level</p>
-          </div>
-
-          {/* Goals */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl border border-orange-200">
-              <h3 className="font-semibold text-slate-900 mb-2 text-sm">Weight Loss Goal</h3>
-              <div className="text-2xl font-bold text-orange-600">{calories.weightLoss} cal/day</div>
-              <p className="text-xs text-slate-600 mt-1">~0.5 kg/week loss</p>
+        <div className="lg:col-span-8 space-y-6">
+          <div className="bg-slate-900 text-white p-10 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-5"><Zap size={150} /></div>
+            <div className="text-center md:text-left mb-6 md:mb-0">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-rose-500 mb-2 font-mono">// daily_maintenance //</h3>
+              <div className="text-6xl font-black text-white">{calories.tdee}</div>
+              <p className="text-slate-400 mt-2 italic">Calories per day to maintain weight</p>
             </div>
+            <div className="bg-white/10 p-6 rounded-2xl border border-white/10 w-full md:w-auto">
+              <h4 className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-1">Basal Metabolic Rate</h4>
+              <div className="text-3xl font-bold font-mono">{calories.bmr}</div>
+              <p className="text-[10px] opacity-50">Base calories at rest</p>
+            </div>
+          </div>
 
-            <div className="bg-gradient-to-br from-rose-50 to-rose-100 p-4 rounded-xl border border-rose-200">
-              <h3 className="font-semibold text-slate-900 mb-2 text-sm">Weight Gain Goal</h3>
-              <div className="text-2xl font-bold text-rose-600">{calories.weightGain} cal/day</div>
-              <p className="text-xs text-slate-600 mt-1">~0.3 kg/week gain</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-orange-50 border-2 border-orange-100 p-8 rounded-2xl flex flex-col justify-center">
+              <h3 className="text-orange-900 font-bold mb-1 uppercase text-xs tracking-widest italic font-mono">Weight_Loss_Mode</h3>
+              <div className="text-4xl font-black text-orange-600">{calories.weightLoss} <span className="text-xs text-orange-400 font-normal">cal/day</span></div>
+              <p className="text-xs text-orange-700/60 mt-2 italic font-medium">Calculated at a -500 calorie deficit</p>
+            </div>
+            <div className="bg-emerald-50 border-2 border-emerald-100 p-8 rounded-2xl flex flex-col justify-center">
+              <h3 className="text-emerald-900 font-bold mb-1 uppercase text-xs tracking-widest italic font-mono">Weight_Gain_Mode</h3>
+              <div className="text-4xl font-black text-emerald-600">{calories.weightGain} <span className="text-xs text-emerald-400 font-normal">cal/day</span></div>
+              <p className="text-xs text-emerald-700/60 mt-2 italic font-medium">Calculated at a +300 calorie surplus</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Information */}
-      <section className="mt-8 bg-slate-50 p-8 rounded-xl border border-slate-200">
-        <h2 className="text-lg font-semibold mb-3 text-slate-900">How This Works</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-700">
+      {/* EDUCATIONAL CONTENT: AdSense Booster */}
+      <section className="prose prose-slate max-w-none space-y-12 border-t pt-16 border-slate-100">
+        <div className="grid md:grid-cols-2 gap-12">
           <div>
-            <h3 className="font-semibold text-slate-900 mb-2">BMR Calculation</h3>
-            <p>Uses the Mifflin-St Jeor equation to calculate your basal metabolic rate - the minimum calories your body needs at rest.</p>
+            <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 mb-4">
+              <BookOpen className="text-rose-600" size={24} /> BMR vs. TDEE
+            </h2>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Your <strong>Basal Metabolic Rate (BMR)</strong> is the number of calories your body needs to 
+              perform basic life-sustaining functions at rest. Your <strong>Total Daily Energy Expenditure (TDEE)</strong> 
+              factors in your physical activity level. Understanding both is critical for effective 
+              <strong> nutritional planning</strong> and metabolic health.
+            </p>
           </div>
           <div>
-            <h3 className="font-semibold text-slate-900 mb-2">TDEE Calculation</h3>
-            <p>Multiplies your BMR by an activity factor to estimate total daily energy expenditure based on your lifestyle.</p>
+            <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 mb-4">
+              <Heart className="text-rose-600" size={24} /> Sustainable Goals
+            </h2>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              For healthy weight management, experts typically recommend a <strong>deficit or surplus</strong> 
+              of 300 to 500 calories per day. Rapid weight change can lead to muscle loss and nutrient 
+              deficiencies. Use this calculator to identify a <strong>consistent baseline</strong> for 
+              long-term success.
+            </p>
           </div>
-          <div>
-            <h3 className="font-semibold text-slate-900 mb-2">Weight Goals</h3>
-            <p>Uses standard calorie deficits/surpluses (500 cal loss, 300 cal gain) to estimate weight change rates.</p>
+        </div>
+
+        <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200">
+          <h3 className="text-slate-900 font-bold mb-4 uppercase tracking-widest text-xs flex items-center gap-2">
+            <Info size={18} className="text-rose-600" /> The Mifflin-St Jeor Formula
+          </h3>
+          <p className="text-slate-600 text-sm leading-relaxed mb-4 italic">
+            This tool uses the <strong>Mifflin-St Jeor equation</strong>, widely regarded as the most 
+            accurate method for estimating metabolic rates in healthy adults. 
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[10px] font-mono font-bold uppercase tracking-tight text-slate-400">
+            <div className="bg-white p-4 rounded-xl border border-slate-100 italic">Male: (10 × wt) + (6.25 × ht) - (5 × age) + 5</div>
+            <div className="bg-white p-4 rounded-xl border border-slate-100 italic">Female: (10 × wt) + (6.25 × ht) - (5 × age) - 161</div>
           </div>
         </div>
       </section>
+
+      {/* MANDATORY MEDICAL DISCLAIMER */}
+      <footer className="mt-16 bg-rose-50 border-l-4 border-rose-400 p-6 rounded-r-xl">
+        <div className="flex gap-4">
+          <ShieldCheck className="text-rose-600 shrink-0" size={24} />
+          <p className="text-xs text-rose-800 leading-relaxed font-medium italic">
+            <strong>Medical Disclaimer:</strong> Calorie estimates are for informational purposes only. 
+            Factors such as muscle mass, genetics, and underlying health conditions can affect your 
+            actual metabolic rate. Consult a <strong>licensed dietitian or healthcare professional</strong> 
+            before starting any intensive restrictive diet or fitness program.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

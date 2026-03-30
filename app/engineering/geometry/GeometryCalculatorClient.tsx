@@ -2,6 +2,15 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { 
+  Shapes, 
+  Info, 
+  BookOpen, 
+  ShieldCheck, 
+  ChevronLeft, 
+  Maximize, 
+  Box 
+} from 'lucide-react';
 
 type ShapeType = 'circle' | 'rectangle' | 'triangle' | 'sphere' | 'cube' | 'cylinder';
 
@@ -14,42 +23,19 @@ export default function GeometryCalculator() {
     
     switch (shapeType) {
       case 'circle':
-        return {
-          area: Math.PI * r * r,
-          perimeter: 2 * Math.PI * r,
-          label: 'Radius'
-        };
+        return { area: Math.PI * r * r, perimeter: 2 * Math.PI * r, label: 'Radius' };
       case 'rectangle':
-        return {
-          area: a * b,
-          perimeter: 2 * (a + b),
-          label: 'Length × Width'
-        };
+        return { area: a * b, perimeter: 2 * (a + b), label: 'Length × Width' };
       case 'triangle':
         const s = (a + b + c) / 2;
-        return {
-          area: Math.sqrt(s * (s - a) * (s - b) * (s - c)),
-          perimeter: a + b + c,
-          label: 'Sides (a, b, c)'
-        };
+        const area = a + b > c && a + c > b && b + c > a ? Math.sqrt(s * (s - a) * (s - b) * (s - c)) : 0;
+        return { area, perimeter: a + b + c, label: 'Sides (a, b, c)' };
       case 'sphere':
-        return {
-          area: 4 * Math.PI * r * r,
-          volume: (4 / 3) * Math.PI * r * r * r,
-          label: 'Radius'
-        };
+        return { area: 4 * Math.PI * r * r, volume: (4 / 3) * Math.PI * r * r * r, label: 'Radius' };
       case 'cube':
-        return {
-          area: 6 * a * a,
-          volume: a * a * a,
-          label: 'Side Length'
-        };
+        return { area: 6 * a * a, volume: a * a * a, label: 'Side Length' };
       case 'cylinder':
-        return {
-          area: 2 * Math.PI * r * (r + h),
-          volume: Math.PI * r * r * h,
-          label: 'Radius & Height'
-        };
+        return { area: 2 * Math.PI * r * (r + h), volume: Math.PI * r * r * h, label: 'Radius & Height' };
     }
   }, [shapeType, values]);
 
@@ -57,32 +43,55 @@ export default function GeometryCalculator() {
     setValues(prev => ({ ...prev, [key]: value }));
   };
 
+  const format = (val: number) => val.toLocaleString(undefined, { maximumFractionDigits: 4 });
+
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Navigation */}
-      <div className="mb-6 flex gap-4">
+    <div className="max-w-5xl mx-auto px-4 pb-20">
+     {/* Navigation */}
+      <nav className="mb-8 flex flex-wrap gap-3 pt-6">
         <Link 
           href="/engineering" 
-          className="inline-block px-4 py-2 bg-amber-50 text-amber-600 rounded-lg hover:bg-amber-100 transition-colors font-medium"
+          className="inline-block px-4 py-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors font-medium"
         >
-          ← Back to Engineering
+          ← Engineering Hub
         </Link>
+        <Link 
+          href="/engineering/scientific" 
+          className="inline-block px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors font-medium"
+        >
+          Scientific Calculator
+        </Link>
+        <Link 
+          href="/engineering/percentage" 
+          className="inline-block px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors font-medium"
+        >
+          Percentage Calculator
+        </Link>
+      </nav>
+
+      {/* Header */}
+      <header className="mb-10">
+        <h1 className="text-4xl font-black text-slate-900 mb-4 tracking-tight flex items-center gap-3">
+          <Shapes className="text-amber-600" size={36} />
+          Area & Volume Calculator
+        </h1>
+        <p className="text-lg text-slate-600 leading-relaxed max-w-3xl">
+          A high-precision utility for <strong>spatial analysis</strong>. Calculate the surface area, 
+          perimeter, and volume of common 2D and 3D geometric shapes with <strong>floating-point accuracy</strong>.
+        </p>
+      </header>
+
+      {/* Ad Slot - Top */}
+      <div className="w-full h-24 bg-slate-50 mb-10 flex flex-col items-center justify-center border border-slate-100 rounded-xl">
+        <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Sponsored Advertisement</span>
       </div>
 
-      <section className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Area & Volume Calculator</h1>
-        <p className="text-slate-600">Calculate areas and volumes of common 2D and 3D shapes.</p>
-      </section>
-
-      {/* Ad Slot */}
-      <div className="w-full h-24 bg-slate-100 mb-8 flex items-center justify-center border-dashed border-2 border-slate-300">
-        <span className="text-slate-400 text-xs">Advertisement</span>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
         {/* Shape Selection */}
-        <div className="md:col-span-1 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h2 className="font-semibold mb-4 text-slate-900">Select Shape</h2>
+        <div className="lg:col-span-4 bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+          <h2 className="text-xl font-bold mb-6 text-slate-800 flex items-center gap-2 uppercase tracking-tighter">
+            <Info size={20} className="text-amber-600" /> Select Shape
+          </h2>
           <div className="space-y-2">
             {[
               { value: 'circle', label: 'Circle', type: '2D' },
@@ -95,161 +104,133 @@ export default function GeometryCalculator() {
               <button
                 key={shape.value}
                 onClick={() => setShapeType(shape.value as ShapeType)}
-                className={`w-full p-3 rounded-lg text-left font-medium transition-all border ${
+                className={`w-full p-3 rounded-xl text-left font-bold transition-all border-2 ${
                   shapeType === shape.value
-                    ? 'bg-amber-100 border-amber-400 text-amber-900'
-                    : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                    ? 'bg-amber-600 border-amber-600 text-white shadow-lg'
+                    : 'bg-slate-50 border-slate-100 text-slate-600 hover:border-amber-200 hover:bg-white'
                 }`}
               >
-                {shape.label} <span className="text-xs opacity-60">({shape.type})</span>
+                {shape.label} <span className="text-[10px] opacity-60 ml-1 tracking-widest uppercase">[{shape.type}]</span>
               </button>
             ))}
           </div>
         </div>
 
         {/* Inputs and Results */}
-        <div className="md:col-span-2">
-          {/* Inputs */}
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mb-6">
-            <h2 className="font-semibold mb-4 text-slate-900">Dimensions</h2>
-            <div className="space-y-3">
-              {shapeType === 'circle' && (
+        <div className="lg:col-span-8 flex flex-col gap-6">
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+            <h2 className="text-xl font-bold mb-6 text-slate-800 uppercase tracking-tighter">Input Dimensions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {(shapeType === 'circle' || shapeType === 'sphere' || shapeType === 'cylinder') && (
                 <div>
-                  <label className="block text-sm font-medium mb-1">Radius</label>
-                  <input 
-                    type="number"
-                    value={values.r}
-                    onChange={(e) => handleInputChange('r', Number(e.target.value))}
-                    className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 outline-none"
-                  />
-                </div>
-              )}
-              {shapeType === 'rectangle' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Length</label>
-                    <input 
-                      type="number"
-                      value={values.a}
-                      onChange={(e) => handleInputChange('a', Number(e.target.value))}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Width</label>
-                    <input 
-                      type="number"
-                      value={values.b}
-                      onChange={(e) => handleInputChange('b', Number(e.target.value))}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 outline-none"
-                    />
-                  </div>
-                </>
-              )}
-              {shapeType === 'triangle' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Side A</label>
-                    <input 
-                      type="number"
-                      value={values.a}
-                      onChange={(e) => handleInputChange('a', Number(e.target.value))}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Side B</label>
-                    <input 
-                      type="number"
-                      value={values.b}
-                      onChange={(e) => handleInputChange('b', Number(e.target.value))}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Side C</label>
-                    <input 
-                      type="number"
-                      value={values.c}
-                      onChange={(e) => handleInputChange('c', Number(e.target.value))}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 outline-none"
-                    />
-                  </div>
-                </>
-              )}
-              {shapeType === 'sphere' && (
-                <div>
-                  <label className="block text-sm font-medium mb-1">Radius</label>
-                  <input 
-                    type="number"
-                    value={values.r}
-                    onChange={(e) => handleInputChange('r', Number(e.target.value))}
-                    className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 outline-none"
-                  />
-                </div>
-              )}
-              {shapeType === 'cube' && (
-                <div>
-                  <label className="block text-sm font-medium mb-1">Side Length</label>
-                  <input 
-                    type="number"
-                    value={values.a}
-                    onChange={(e) => handleInputChange('a', Number(e.target.value))}
-                    className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 outline-none"
-                  />
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Radius</label>
+                  <input type="number" value={values.r} onChange={(e) => handleInputChange('r', Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-amber-500 outline-none transition-all font-medium text-lg" />
                 </div>
               )}
               {shapeType === 'cylinder' && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Radius</label>
-                    <input 
-                      type="number"
-                      value={values.r}
-                      onChange={(e) => handleInputChange('r', Number(e.target.value))}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 outline-none"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Height</label>
-                    <input 
-                      type="number"
-                      value={values.h}
-                      onChange={(e) => handleInputChange('h', Number(e.target.value))}
-                      className="w-full p-2 border rounded-md focus:ring-2 focus:ring-amber-500 outline-none"
-                    />
-                  </div>
-                </>
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Height</label>
+                  <input type="number" value={values.h} onChange={(e) => handleInputChange('h', Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-amber-500 outline-none transition-all font-medium text-lg" />
+                </div>
+              )}
+              {(shapeType === 'rectangle' || shapeType === 'triangle' || shapeType === 'cube') && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">{shapeType === 'cube' ? 'Side Length' : 'Side A (Length)'}</label>
+                  <input type="number" value={values.a} onChange={(e) => handleInputChange('a', Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-amber-500 outline-none transition-all font-medium text-lg" />
+                </div>
+              )}
+              {(shapeType === 'rectangle' || shapeType === 'triangle') && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">{shapeType === 'rectangle' ? 'Side B (Width)' : 'Side B'}</label>
+                  <input type="number" value={values.b} onChange={(e) => handleInputChange('b', Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-amber-500 outline-none transition-all font-medium text-lg" />
+                </div>
+              )}
+              {shapeType === 'triangle' && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Side C</label>
+                  <input type="number" value={values.c} onChange={(e) => handleInputChange('c', Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-amber-500 outline-none transition-all font-medium text-lg" />
+                </div>
               )}
             </div>
           </div>
 
-          {/* Results */}
-          <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-xl border border-amber-200">
-            <h2 className="font-semibold mb-4 text-slate-900">Results</h2>
-            <div className="space-y-3">
-              {'area' in results && (
-                <div className="flex justify-between">
-                  <span className="text-slate-700">Area:</span>
-                  <span className="font-semibold text-slate-900">{Number(results.area).toLocaleString(undefined, { maximumFractionDigits: 2 })} units²</span>
-                </div>
-              )}
-              {'perimeter' in results && (
-                <div className="flex justify-between">
-                  <span className="text-slate-700">Perimeter:</span>
-                  <span className="font-semibold text-slate-900">{Number(results.perimeter).toLocaleString(undefined, { maximumFractionDigits: 2 })} units</span>
-                </div>
-              )}
-              {'volume' in results && (
-                <div className="flex justify-between">
-                  <span className="text-slate-700">Volume:</span>
-                  <span className="font-semibold text-slate-900">{Number(results.volume).toLocaleString(undefined, { maximumFractionDigits: 2 })} units³</span>
-                </div>
-              )}
+          <div className="bg-slate-900 text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row gap-8 items-center justify-around relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-5">
+              <Maximize size={150} />
             </div>
+            <div className="text-center md:text-left">
+              <p className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-1 italic font-mono">// surface_area //</p>
+              <div className="text-4xl font-black">{format(results.area)}</div>
+            </div>
+            {'volume' in results && (
+              <div className="text-center md:text-left">
+                <p className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-1 italic font-mono">// volume //</p>
+                <div className="text-4xl font-black text-white">{format((results as any).volume)}</div>
+              </div>
+            )}
+            {'perimeter' in results && (
+              <div className="text-center md:text-left">
+                <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-1 italic font-mono">// perimeter //</p>
+                <div className="text-4xl font-black text-white">{format((results as any).perimeter)}</div>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* EDUCATIONAL CONTENT: AdSense Booster */}
+      <section className="prose prose-slate max-w-none space-y-12 border-t pt-16 border-slate-100">
+        <div className="grid md:grid-cols-2 gap-12 text-slate-600 leading-relaxed">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 mb-4">
+              <BookOpen className="text-amber-600" size={24} /> Understanding Spatial Math
+            </h2>
+            <p className="text-sm">
+              In engineering and <strong>technical drafting</strong>, calculating <strong>volume and area</strong> 
+              is fundamental. Whether you are determining the amount of concrete needed for a <strong>cylindrical column</strong> 
+              or calculating the surface tension on a <strong>sphere</strong>, these mathematical models 
+              provide the baseline for resource estimation and structural integrity.
+            </p>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 mb-4">
+              <Box className="text-amber-600" size={24} /> 2D vs. 3D Geometry
+            </h2>
+            <p className="text-sm">
+              While 2D shapes like <strong>rectangles and circles</strong> focus on area (the space inside a boundary), 
+              3D shapes like <strong>cubes and cylinders</strong> add a third dimension: <strong>Volume</strong>. 
+              Our calculator also provides <strong>Surface Area</strong> for 3D objects, which is critical for 
+              estimating materials like paint, thermal coatings, or electrical shielding.
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200">
+          <h3 className="text-slate-900 font-bold mb-4 uppercase tracking-widest text-xs flex items-center gap-2">
+            <Info size={18} className="text-amber-600" /> Technical Formulas
+          </h3>
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 list-none p-0 text-[10px] font-mono tracking-tight text-slate-500 uppercase font-bold">
+            <li className="bg-white p-4 rounded-xl border border-slate-200">Circle Area: π × r²</li>
+            <li className="bg-white p-4 rounded-xl border border-slate-200">Sphere Volume: 4/3 × π × r³</li>
+            <li className="bg-white p-4 rounded-xl border border-slate-200">Cylinder Volume: π × r² × h</li>
+            <li className="bg-white p-4 rounded-xl border border-slate-200">Triangle: Heron's Formula</li>
+            <li className="bg-white p-4 rounded-xl border border-slate-200">Cube Area: 6 × side²</li>
+            <li className="bg-white p-4 rounded-xl border border-slate-200">Rectangle: l × w</li>
+          </ul>
+        </div>
+      </section>
+
+      {/* Mandatory Disclaimer */}
+      <footer className="mt-16 bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-xl">
+        <div className="flex gap-4">
+          <ShieldCheck className="text-amber-600 shrink-0" size={24} />
+          <p className="text-xs text-amber-800 leading-relaxed font-medium italic">
+            <strong>Technical Note:</strong> Geometric calculations provided by SyntixGear use <strong>Pi (π)</strong> rounded to 15 decimal places. 
+            While we provide industrial-grade accuracy, results should always be verified by a <strong>licensed engineer</strong> 
+            before committing to high-stakes architectural or manufacturing specifications.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

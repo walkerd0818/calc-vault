@@ -1,8 +1,17 @@
-
 'use client';
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { 
+  Briefcase, 
+  Info, 
+  ShieldAlert, 
+  Scale, 
+  FileText, 
+  HelpCircle,
+  Clock,
+  Stethoscope
+} from 'lucide-react';
 
 export default function WorkersCompCalculator() {
   const [avgWeeklyWage, setAvgWeeklyWage] = useState(1500);
@@ -13,14 +22,10 @@ export default function WorkersCompCalculator() {
   const [medicalTreatment, setMedicalTreatment] = useState(8000);
   const [permanentState, setPermanentState] = useState('CA');
 
-  // Most workers' comp benefits are 66.67% (2/3) of average weekly wage
   const benefitPercentage = 0.6667;
+  const maxWeeklyBenefit = 1615.50; 
+  const maxTemporaryWeeks = 104; 
 
-  // Maximum benefit limits vary by state - using CA as baseline
-  const maxWeeklyBenefit = 1615.50; // 2024 CA max
-  const maxTemporaryWeeks = 104; // CA typical max
-
-  // Body part schedules (typical multipliers for permanent partial disability)
   const scheduleMultipliers: Record<string, number> = {
     arm: 312,
     leg: 350,
@@ -33,268 +38,194 @@ export default function WorkersCompCalculator() {
     let totalBenefit = 0;
     let weeklyBenefit = 0;
     let permanentDisabilityBenefit = 0;
-    let compensationBreakdown = '';
     let benefitType = '';
 
     switch (disabilityType) {
       case 'temporary':
-        // Temporary Total Disability (TTD)
         weeklyBenefit = Math.min(avgWeeklyWage * benefitPercentage, maxWeeklyBenefit);
         totalBenefit = weeklyBenefit * Math.min(weeksDisabled, maxTemporaryWeeks);
         benefitType = 'Temporary Total Disability (TTD)';
         break;
-
       case 'permanent_partial':
-        // Permanent Partial Disability (PPD)
         weeklyBenefit = Math.min(avgWeeklyWage * benefitPercentage, maxWeeklyBenefit);
         const weeks = scheduleMultipliers[bodyPart] * (impairmentRating / 100);
         permanentDisabilityBenefit = weeklyBenefit * weeks;
         totalBenefit = permanentDisabilityBenefit;
         benefitType = 'Permanent Partial Disability (PPD)';
         break;
-
       case 'permanent_total':
-        // Permanent Total Disability (PTD) - lifelong benefits
         weeklyBenefit = Math.min(avgWeeklyWage * benefitPercentage, maxWeeklyBenefit);
-        // Estimate for 35 years life expectancy
-        totalBenefit = weeklyBenefit * 52 * 35;
+        totalBenefit = weeklyBenefit * 52 * 35; // 35 year estimate
         benefitType = 'Permanent Total Disability (PTD)';
         break;
     }
 
-    const totalWithMedical = totalBenefit + medicalTreatment;
-
     return {
       weeklyBenefit,
       totalBenefit,
-      permanentDisabilityBenefit,
       medicalTreatment,
-      totalWithMedical,
+      totalWithMedical: totalBenefit + medicalTreatment,
       benefitType,
       benefitPercentage: (benefitPercentage * 100).toFixed(1),
       estimatedWeeks: disabilityType === 'temporary' 
         ? Math.min(weeksDisabled, maxTemporaryWeeks)
         : disabilityType === 'permanent_partial'
         ? (scheduleMultipliers[bodyPart] * (impairmentRating / 100)).toFixed(0)
-        : '1,820+ (lifelong)',
+        : 'Lifelong',
     };
   }, [avgWeeklyWage, disabilityType, weeksDisabled, impairmentRating, bodyPart, medicalTreatment]);
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-5xl mx-auto px-4 pb-20">
       {/* Navigation */}
-      <div className="mb-6 flex gap-4">
-        <Link 
-          href="/legal" 
-          className="inline-block px-4 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors font-medium"
-        >
-          ← Back to Legal
+      <nav className="mb-8 flex flex-wrap gap-3 pt-6">
+        <Link href="/legal" className="px-4 py-2 bg-purple-50 text-purple-600 rounded-full hover:bg-purple-600 hover:text-white transition-all text-sm font-bold shadow-sm">
+          ← Legal Hub
         </Link>
-        <Link 
-          href="/legal/settlement" 
-          className="inline-block px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors font-medium"
-        >
-          Settlement Calculator
+        <Link href="/legal/settlement" className="px-4 py-2 bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200 transition-all text-sm font-bold shadow-sm">
+          Personal Injury Calc
         </Link>
-      </div>
+      </nav>
 
-      <section className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Workers' Comp & Disability Calculator</h1>
-        <p className="text-slate-600">
-          Estimate workers' compensation benefits for temporary, permanent partial, or permanent total disability. Includes medical treatment coverage.
+      {/* Header */}
+      <header className="mb-10">
+        <h1 className="text-4xl font-black text-slate-900 mb-4 tracking-tight flex items-center gap-3">
+          <Briefcase className="text-purple-600" size={36} />
+          Workers' Comp & Disability Calculator
+        </h1>
+        <p className="text-lg text-slate-600 leading-relaxed max-w-3xl">
+          Estimate your <strong>wage replacement benefits</strong> and potential <strong>disability settlements</strong>. 
+          Understand the financial impact of work-related injuries based on state-mandated formulas and impairment ratings.
         </p>
-      </section>
+      </header>
 
-      {/* Ad Slot */}
-      <div className="w-full h-24 bg-slate-100 mb-8 flex items-center justify-center border-dashed border-2 border-slate-300">
-        <span className="text-slate-400 text-xs">Advertisement</span>
+      {/* Ad Slot - Top */}
+      <div className="w-full h-24 bg-slate-50 mb-10 flex flex-col items-center justify-center border border-slate-100 rounded-xl">
+        <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Sponsored Advertisement</span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-        {/* Wage & Medical Information */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h2 className="text-lg font-semibold mb-4">Employee Information</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Average Weekly Wage ($)</label>
-              <input 
-                type="number"
-                value={avgWeeklyWage}
-                onChange={(e) => setAvgWeeklyWage(Number(e.target.value))}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-purple-500 outline-none"
-              />
-              <p className="text-xs text-slate-500 mt-1">Based on last 52 weeks of earnings</p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Medical Treatment Costs ($)</label>
-              <input 
-                type="number"
-                value={medicalTreatment}
-                onChange={(e) => setMedicalTreatment(Number(e.target.value))}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-purple-500 outline-none"
-              />
-              <p className="text-xs text-slate-500 mt-1">Usually covered in full by workers' comp</p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">State</label>
-              <select 
-                value={permanentState}
-                onChange={(e) => setPermanentState(e.target.value)}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-purple-500 outline-none"
-              >
-                <option value="CA">California</option>
-                <option value="TX">Texas</option>
-                <option value="NY">New York</option>
-                <option value="FL">Florida</option>
-                <option value="IL">Illinois</option>
-                <option value="OTHER">Other</option>
-              </select>
-              <p className="text-xs text-slate-500 mt-1">Benefits vary by state</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Disability Type & Details */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-          <h2 className="text-lg font-semibold mb-4">Disability Type</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Classification</label>
-              <select 
-                value={disabilityType}
-                onChange={(e) => setDisabilityType(e.target.value as any)}
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-purple-500 outline-none"
-              >
-                <option value="temporary">Temporary Total Disability (TTD)</option>
-                <option value="permanent_partial">Permanent Partial Disability (PPD)</option>
-                <option value="permanent_total">Permanent Total Disability (PTD)</option>
-              </select>
-            </div>
-
-            {disabilityType === 'temporary' && (
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+        {/* Inputs */}
+        <div className="lg:col-span-7 space-y-6">
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+            <h2 className="text-xl font-bold mb-6 text-slate-800 flex items-center gap-2">
+              <FileText size={20} className="text-purple-600" /> Employee Data
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium mb-1">Weeks Disabled</label>
-                <input 
-                  type="number"
-                  value={weeksDisabled}
-                  onChange={(e) => setWeeksDisabled(Number(e.target.value))}
-                  className="w-full p-2 border rounded-md focus:ring-2 focus:ring-purple-500 outline-none"
-                />
-                <p className="text-xs text-slate-500 mt-1">Max 104 weeks in most states</p>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Avg Weekly Wage ($)</label>
+                <input type="number" value={avgWeeklyWage} onChange={(e) => setAvgWeeklyWage(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-purple-500 outline-none transition-all font-medium" />
               </div>
-            )}
-
-            {disabilityType === 'permanent_partial' && (
-              <>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Body Part Affected</label>
-                  <select 
-                    value={bodyPart}
-                    onChange={(e) => setBodyPart(e.target.value as any)}
-                    className="w-full p-2 border rounded-md focus:ring-2 focus:ring-purple-500 outline-none"
-                  >
-                    <option value="arm">Arm</option>
-                    <option value="leg">Leg</option>
-                    <option value="hand">Hand</option>
-                    <option value="finger">Finger</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Impairment Rating (%)</label>
-                  <input 
-                    type="number"
-                    value={impairmentRating}
-                    onChange={(e) => setImpairmentRating(Math.min(100, Math.max(0, Number(e.target.value))))}
-                    max={100}
-                    min={0}
-                    className="w-full p-2 border rounded-md focus:ring-2 focus:ring-purple-500 outline-none"
-                  />
-                  <p className="text-xs text-slate-500 mt-1">Determined by medical exam</p>
-                </div>
-              </>
-            )}
-
-            {disabilityType === 'permanent_total' && (
-              <div className="bg-red-50 border border-red-200 p-3 rounded-lg text-sm text-red-700">
-                <p className="font-semibold">Permanent Total Disability</p>
-                <p className="text-xs mt-1">Lifelong benefits estimated based on 35-year life expectancy</p>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Medical Costs Paid ($)</label>
+                <input type="number" value={medicalTreatment} onChange={(e) => setMedicalTreatment(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-purple-500 outline-none transition-all font-medium" />
               </div>
-            )}
+              <div className="md:col-span-2">
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Disability Classification</label>
+                <select value={disabilityType} onChange={(e) => setDisabilityType(e.target.value as any)} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-purple-500 outline-none transition-all font-medium bg-white">
+                  <option value="temporary">Temporary Total Disability (TTD)</option>
+                  <option value="permanent_partial">Permanent Partial Disability (PPD)</option>
+                  <option value="permanent_total">Permanent Total Disability (PTD)</option>
+                </select>
+              </div>
+              {disabilityType === 'permanent_partial' && (
+                <>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Impairment %</label>
+                    <input type="number" value={impairmentRating} onChange={(e) => setImpairmentRating(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-purple-500 outline-none transition-all font-medium" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Affected Body Part</label>
+                    <select value={bodyPart} onChange={(e) => setBodyPart(e.target.value as any)} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-purple-500 outline-none transition-all font-medium bg-white">
+                      <option value="arm">Arm</option>
+                      <option value="leg">Leg</option>
+                      <option value="hand">Hand</option>
+                      <option value="finger">Finger</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Results */}
+        <div className="lg:col-span-5">
+          <div className="bg-slate-900 text-white p-8 rounded-2xl shadow-xl h-full flex flex-col justify-between border-b-8 border-purple-600">
+            <div>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-purple-400 mb-2">Estimated Weekly Benefit</h3>
+              <div className="text-5xl font-black mb-4">${calculations.weeklyBenefit.toLocaleString(undefined, { maximumFractionDigits: 2 })}</div>
+              <div className="space-y-3 pt-4 border-t border-white/10">
+                <div className="flex justify-between text-sm italic">
+                  <span className="text-slate-400">Benefit Type:</span>
+                  <span className="text-white">{calculations.benefitType}</span>
+                </div>
+                <div className="flex justify-between text-sm italic">
+                  <span className="text-slate-400">Benefit Duration:</span>
+                  <span className="text-white">{calculations.estimatedWeeks} Weeks</span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-8 pt-6 border-t border-white/10 text-center">
+               <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">Total Projected Value</p>
+               <div className="text-3xl font-bold text-emerald-400 font-mono">${calculations.totalWithMedical.toLocaleString()}</div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Weekly Benefit */}
-      <div className="bg-blue-50 border border-blue-200 p-6 rounded-xl mb-6">
-        <h3 className="font-semibold text-slate-900 mb-3">Weekly Benefit Rate</h3>
-        <div className="grid grid-cols-2 gap-4">
+      {/* EDUCATIONAL CONTENT: AdSense Booster */}
+      <section className="prose prose-slate max-w-none mb-16 space-y-12">
+        <div className="grid md:grid-cols-2 gap-12 border-t pt-12 border-slate-100">
           <div>
-            <div className="text-sm text-slate-700">Weekly Wage</div>
-            <div className="text-2xl font-bold">${avgWeeklyWage.toLocaleString()}</div>
+            <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 mb-4">
+              <Clock className="text-purple-600" /> TTD vs. PPD
+            </h2>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              <strong>Temporary Total Disability (TTD)</strong> benefits are paid while you are unable to work and recovering from your injury. 
+              Once you reach <strong>Maximum Medical Improvement (MMI)</strong>, your status may shift to <strong>Permanent Partial Disability (PPD)</strong> 
+              if you have lasting impairments. PPD values are often determined by a state-specific "schedule of benefits" for specific body parts.
+            </p>
           </div>
           <div>
-            <div className="text-sm text-slate-700">Weekly Benefit ({calculations.benefitPercentage}%)</div>
-            <div className="text-2xl font-bold text-blue-600">${calculations.weeklyBenefit.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Benefit Calculation */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-        <div className="bg-purple-50 border border-purple-200 p-6 rounded-xl">
-          <h3 className="font-semibold text-slate-900 mb-3">{calculations.benefitType}</h3>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-slate-700">Weekly Rate:</span>
-              <span className="font-semibold">${calculations.weeklyBenefit.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-700">Duration:</span>
-              <span className="font-semibold">{calculations.estimatedWeeks} weeks</span>
-            </div>
-            <div className="border-t border-purple-300 pt-2 flex justify-between">
-              <span className="font-semibold">Total Benefits:</span>
-              <span className="text-lg font-bold text-purple-600">
-                ${calculations.totalBenefit.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              </span>
-            </div>
+            <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 mb-4">
+              <Stethoscope className="text-purple-600" /> Medical Coverage
+            </h2>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              In almost all jurisdictions, <strong>Workers' Compensation</strong> covers 100% of reasonable and necessary medical treatment 
+              related to the workplace injury. This includes surgery, physical therapy, and prescription medications. Unlike standard 
+              health insurance, there are typically <strong>no co-pays or deductibles</strong> for the injured worker.
+            </p>
           </div>
         </div>
 
-        <div className="bg-emerald-50 border border-emerald-200 p-6 rounded-xl">
-          <h3 className="font-semibold text-slate-900 mb-3">Total Compensation</h3>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-slate-700">Wage Benefits:</span>
-              <span className="font-semibold">${calculations.totalBenefit.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+        <div className="bg-slate-50 p-8 rounded-2xl border border-slate-200">
+          <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2 mb-6">
+            <HelpCircle className="text-purple-600" /> Settlement FAQ
+          </h2>
+          <div className="space-y-6">
+            <div>
+              <h4 className="font-bold text-slate-800 mb-2">What is an Impairment Rating?</h4>
+              <p className="text-sm text-slate-600 leading-relaxed">After reaching MMI, a doctor will evaluate your permanent physical loss. This rating (0-100%) is used in a formula against your state's benefit schedule to determine the dollar value of your settlement.</p>
             </div>
-            <div className="flex justify-between">
-              <span className="text-slate-700">Medical Coverage:</span>
-              <span className="font-semibold">${calculations.medicalTreatment.toLocaleString()}</span>
-            </div>
-            <div className="border-t border-emerald-300 pt-2 flex justify-between">
-              <span className="font-semibold">Total Package:</span>
-              <span className="text-lg font-bold text-emerald-600">
-                ${calculations.totalWithMedical.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              </span>
+            <div>
+              <h4 className="font-bold text-slate-800 mb-2">Are benefits taxable?</h4>
+              <p className="text-sm text-slate-600 leading-relaxed">In the United States, Workers' Compensation benefits are generally <strong>exempt from federal and state income taxes</strong>, allowing the worker to keep the full 2/3 wage replacement amount.</p>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Disclaimer */}
-      <section className="bg-amber-50 border border-amber-200 p-6 rounded-xl">
-        <h2 className="text-lg font-semibold mb-3 text-slate-900">Important Disclaimer</h2>
-        <p className="text-sm text-slate-700 mb-2">
-          This calculator provides estimates only and is not legal or medical advice. Workers' compensation benefits vary significantly by state, employer, and specific circumstances. This calculation is based on California guidelines.
-        </p>
-        <p className="text-sm text-slate-700">
-          Consult with a workers' compensation attorney or your state's Workers' Compensation Appeals Board for accurate information about your specific case.
-        </p>
       </section>
+
+      {/* Mandatory Disclaimer */}
+      <footer className="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-xl">
+        <div className="flex gap-4">
+          <ShieldAlert className="text-amber-600 shrink-0" size={24} />
+          <p className="text-xs text-amber-800 leading-relaxed font-medium">
+            <strong>Legal Disclosure:</strong> Workers' compensation laws vary significantly by state. This calculator uses generalized formulas and 2024 California maximums as a baseline. It is provided for educational purposes and is <strong>not a substitute for legal advice</strong>. Consult with a qualified workers' compensation attorney to determine the exact value of your claim based on local statutes.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
