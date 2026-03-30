@@ -45,15 +45,19 @@ export default function SettlementCalculator() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* Navigation */}
-      <div className="mb-6 flex gap-4">
-        <Link href="/legal" className="inline-block px-4 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors font-medium text-sm">
+       {/* Navigation */}
+      <nav className="mb-8 flex flex-wrap gap-3 pt-6">
+        <Link href="/legal" className="px-4 py-2 bg-purple-50 text-purple-600 rounded-full hover:bg-purple-600 hover:text-white transition-all text-sm font-bold shadow-sm">
           ← Legal Hub
         </Link>
-        <Link href="/legal/workers-comp" className="inline-block px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors font-medium text-sm">
-          Workers' Comp Calculator
+        <Link href="/legal/workers-comp" className="px-4 py-2 bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200 transition-all text-sm font-bold shadow-sm">
+          Worker's Comp Calculator
         </Link>
-      </div>
+       <Link href="/legal/wrongful-termination" className="px-4 py-2 bg-slate-100 text-slate-700 rounded-full hover:bg-slate-200 transition-all text-sm font-bold shadow-sm">
+          Wrongful Termination
+        </Link>
+      </nav>
+
 
       <section className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Personal Injury Settlement Calculator</h1>

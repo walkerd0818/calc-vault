@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Scale, ChevronRight, Gavel, ShieldAlert, Info, Briefcase, FileText } from 'lucide-react';
+import { Scale, ChevronRight, Gavel, ShieldAlert, Info, Briefcase, FileText, UserX } from 'lucide-react';
 
 const legalCalculators = [
   { 
@@ -16,6 +16,12 @@ const legalCalculators = [
     href: '/legal/workers-comp', 
     icon: <Briefcase size={20} />,
     description: 'Calculate projected weekly benefits and permanent disability ratings based on state formulas.' 
+  },
+  { 
+    name: 'Wrongful Termination', 
+    href: '/legal/wrongful-termination', 
+    icon: <UserX size={20} />,
+    description: 'Estimate damages for lost back-pay, front-pay, and emotional distress following illegal discharge.' 
   },
 ];
 
@@ -84,10 +90,9 @@ export default function LegalPage() {
               Statutory Frameworks
             </h2>
             <p className="text-sm">
-              Unlike personal injury, <strong>Workers' Compensation</strong> is governed by strict state 
-              statutes. Benefits are usually a percentage of the worker's average weekly wage (AWW). Our 
-              calculators help estimate these caps and durations based on standard insurance 
-              <strong> disability ratings</strong> and impairment schedules.
+              Unlike personal injury, <strong>Workers' Compensation</strong> and <strong>Employment Law</strong> are governed by strict state 
+              and federal statutes. Benefits are often calculated based on lost earnings, mitigation of damages, and statutory caps. Our 
+              calculators help estimate these variables based on standard legal frameworks.
             </p>
           </div>
         </div>
