@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import Script from 'next/script';
 import './globals.css';
+import { UnitProvider } from '@/lib/unit-context';
 import { Metadata } from 'next';
 
 interface RootLayoutProps {
@@ -15,6 +16,22 @@ interface RootLayoutProps {
 export const metadata: Metadata = {
   title: 'CalcVault | Professional Online Calculators',
   description: 'Hundreds of free finance, math, and unit conversion calculators.',
+  metadataBase: new URL('https://syntixgear.com/calc-vault'),
+  openGraph: {
+    title: 'CalcVault | Professional Online Calculators',
+    description: 'Hundreds of free finance, math, and unit conversion calculators.',
+    url: 'https://syntixgear.com/calc-vault',
+    siteName: 'CalcVault',
+    images: [{ url: 'https://syntixgear.com/calc-vault/og-image.png', width: 1200, height: 630, alt: 'CalcVault' }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CalcVault',
+    description: 'Professional online calculators for finance, engineering, health, and units.',
+    images: ['https://syntixgear.com/calc-vault/og-image.png'],
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {
@@ -28,6 +45,20 @@ export default function RootLayout({ children }: RootLayoutProps) {
             crossOrigin="anonymous"
           />
         )}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "CalcVault",
+          "url": "https://syntixgear.com/calc-vault",
+          "publisher": {
+            "@type": "Organization",
+            "name": "SyntixGear",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://syntixgear.com/calc-vault/og-image.png"
+            }
+          }
+        }) }} />
       </head>
       <body className="antialiased bg-slate-50 text-slate-900 min-h-screen flex flex-col">
         {/* Google Analytics */}
@@ -77,7 +108,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
         </header>
 
         <main className="flex-grow max-w-7xl mx-auto w-full p-6">
-          {children}
+          <UnitProvider>
+            {children}
+          </UnitProvider>
           <Analytics />
           <SpeedInsights />
         </main>

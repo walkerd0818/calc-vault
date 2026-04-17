@@ -1,16 +1,38 @@
-'use client';
+"use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { useUnitPreference } from '@/lib/unit-context';
+import { convertUnits } from '@/lib/unit-logic';
 import Link from 'next/link';
 import { Activity, Info, ShieldCheck, Heart, Scale, BookOpen } from 'lucide-react';
 
 export default function BMICalculator() {
-  const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
+  const { unit, setUnit } = useUnitPreference();
   const [weight, setWeight] = useState(70);
   const [height, setHeight] = useState(175);
   const [heightFeet, setHeightFeet] = useState(5);
   const [heightInches, setHeightInches] = useState(9);
   const [weightPounds, setWeightPounds] = useState(154);
+  const prevUnitRef = useRef(unit);
+
+  useEffect(() => {
+    const prev = prevUnitRef.current;
+    if (prev !== unit) {
+      if (unit === 'imperial') {
+        // metric -> imperial
+        setWeightPounds(w => Math.round(convertUnits(weight, 'kg', 'lb', 'weight') * 100) / 100);
+        const totalIn = convertUnits(height / 100, 'meter', 'in', 'length');
+        setHeightFeet(Math.floor(totalIn / 12));
+        setHeightInches(Math.round(totalIn % 12));
+      } else {
+        // imperial -> metric
+        setWeight(w => Math.round(convertUnits(weightPounds, 'lb', 'kg', 'weight') * 100) / 100);
+        const totalIn = (heightFeet * 12) + heightInches;
+        setHeight(Math.round(convertUnits(totalIn, 'in', 'meter', 'length') * 100));
+      }
+      prevUnitRef.current = unit;
+    }
+  }, [unit]);
 
   const bmi = useMemo(() => {
     if (unit === 'metric') {
