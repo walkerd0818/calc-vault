@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { useUnitPreference } from '@/lib/unit-context';
 import Link from 'next/link';
 import { 
   Shapes, 
@@ -18,7 +19,7 @@ type ShapeType = 'circle' | 'rectangle' | 'triangle' | 'sphere' | 'cube' | 'cyli
 
 export default function GeometryCalculator() {
   const [shapeType, setShapeType] = useState<ShapeType>('circle');
-  const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
+  const { unit, setUnit } = useUnitPreference();
   const prevUnitRef = useRef(unit);
   const [values, setValues] = useState({ a: 0, b: 0, c: 0, r: 0, h: 0 });
 
@@ -178,6 +179,10 @@ export default function GeometryCalculator() {
         <div className="lg:col-span-8 flex flex-col gap-6">
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
             <h2 className="text-xl font-bold mb-6 text-slate-800 uppercase tracking-tighter">Input Dimensions</h2>
+            <div className="mb-4 flex gap-2 p-1 bg-slate-100 rounded-xl">
+              <button onClick={() => setUnit('metric')} className={`flex-1 py-2 rounded-lg font-bold transition-all ${unit === 'metric' ? 'bg-white text-amber-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Metric (m)</button>
+              <button onClick={() => setUnit('imperial')} className={`flex-1 py-2 rounded-lg font-bold transition-all ${unit === 'imperial' ? 'bg-white text-amber-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Imperial (ft)</button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {(shapeType === 'circle' || shapeType === 'sphere' || shapeType === 'cylinder') && (
                 <div>

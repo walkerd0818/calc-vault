@@ -3,7 +3,7 @@ import HomeClient from './HomeClient';
 
 export const metadata: Metadata = {
   alternates: {
-    canonical: '/calc-vault',
+    canonical: 'https://syntixgear.com/calc-vault',
   },
 };
 

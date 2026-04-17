@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { convertUnits } from '@/lib/unit-logic';
+import { useUnitPreference } from '@/lib/unit-context';
 import Link from 'next/link';
 import { Activity, Info, ShieldCheck, Heart, Zap, BookOpen } from 'lucide-react';
 
@@ -11,7 +12,7 @@ type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'veryActive
 export default function CalorieCalculator() {
   const [gender, setGender] = useState<Gender>('male');
   const [age, setAge] = useState(30);
-  const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
+  const { unit, setUnit } = useUnitPreference();
   const prevUnitRef = useRef(unit);
   const [weight, setWeight] = useState(70); // kg or lbs depending on unit
   const [height, setHeight] = useState(175); // cm or inches depending on unit
