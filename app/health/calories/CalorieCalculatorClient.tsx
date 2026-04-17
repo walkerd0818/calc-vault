@@ -1,6 +1,7 @@
-'use client';
+ 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { convertUnits } from '@/lib/unit-logic';
 import Link from 'next/link';
 import { Activity, Info, ShieldCheck, Heart, Zap, BookOpen } from 'lucide-react';
 
@@ -10,9 +11,27 @@ type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'veryActive
 export default function CalorieCalculator() {
   const [gender, setGender] = useState<Gender>('male');
   const [age, setAge] = useState(30);
-  const [weight, setWeight] = useState(70);
-  const [height, setHeight] = useState(175);
+  const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
+  const prevUnitRef = useRef(unit);
+  const [weight, setWeight] = useState(70); // kg or lbs depending on unit
+  const [height, setHeight] = useState(175); // cm or inches depending on unit
   const [activityLevel, setActivityLevel] = useState<ActivityLevel>('moderate');
+
+  useEffect(() => {
+    const prev = prevUnitRef.current;
+    if (prev !== unit) {
+      if (unit === 'imperial') {
+        // convert kg -> lb, cm -> in
+        setWeight(w => Math.round(convertUnits(w, 'kg', 'lb', 'weight') * 100) / 100);
+        setHeight(h => Math.round(convertUnits(h / 100, 'meter', 'in', 'length') * 100) / 100);
+      } else {
+        // imperial -> metric: lb -> kg, in -> cm
+        setWeight(w => Math.round(convertUnits(w, 'lb', 'kg', 'weight') * 100) / 100);
+        setHeight(h => Math.round(convertUnits(h, 'in', 'meter', 'length') * 100));
+      }
+      prevUnitRef.current = unit;
+    }
+  }, [unit]);
 
   const activityMultipliers: Record<ActivityLevel, { multiplier: number; description: string }> = {
     sedentary: { multiplier: 1.2, description: 'Little or no exercise' },
@@ -23,11 +42,15 @@ export default function CalorieCalculator() {
   };
 
   const calories = useMemo(() => {
+    // Ensure Mifflin-St Jeor gets kg and cm
+    const weightKg = unit === 'metric' ? weight : convertUnits(weight, 'lb', 'kg', 'weight');
+    const heightCm = unit === 'metric' ? height : (convertUnits(height, 'in', 'meter', 'length') * 100);
+
     let bmr: number;
     if (gender === 'male') {
-      bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+      bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
     } else {
-      bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+      bmr = 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
     }
 
     const tdee = bmr * activityMultipliers[activityLevel].multiplier;
@@ -81,6 +104,10 @@ export default function CalorieCalculator() {
           <h2 className="text-xl font-bold mb-6 text-slate-800 flex items-center gap-2 uppercase tracking-tighter">
             <Info size={20} className="text-rose-600" /> Biometrics
           </h2>
+          <div className="mb-4 flex gap-2 p-1 bg-slate-100 rounded-xl">
+            <button onClick={() => setUnit('metric')} className={`flex-1 py-2 rounded-lg font-bold transition-all ${unit === 'metric' ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Metric</button>
+            <button onClick={() => setUnit('imperial')} className={`flex-1 py-2 rounded-lg font-bold transition-all ${unit === 'imperial' ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>Imperial</button>
+          </div>
           <div className="space-y-5">
             <div>
               <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Gender</label>
@@ -92,18 +119,18 @@ export default function CalorieCalculator() {
                 ))}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Age</label>
                 <input type="number" value={age} onChange={(e) => setAge(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-rose-500 outline-none transition-all font-medium" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Weight (kg)</label>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Weight ({unit === 'metric' ? 'kg' : 'lbs'})</label>
                 <input type="number" value={weight} onChange={(e) => setWeight(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-rose-500 outline-none transition-all font-medium" />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Height (cm)</label>
+              <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Height ({unit === 'metric' ? 'cm' : 'in'})</label>
               <input type="number" value={height} onChange={(e) => setHeight(Number(e.target.value))} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-rose-500 outline-none transition-all font-medium" />
             </div>
             <div>
