@@ -29,6 +29,7 @@ export default function UnitConverter({ category, title, description }: Props) {
       length: { metric: 'meter', imperial: 'ft' },
       weight: { metric: 'kg', imperial: 'lb' },
       temperature: { metric: 'celsius', imperial: 'fahrenheit' },
+      area: { metric: 'square_meter', imperial: 'square_ft' },
     };
 
     const def = defaults[category] || { metric: UnitRegistry[category].units[0].value, imperial: UnitRegistry[category].units[0].value };
