@@ -1,6 +1,7 @@
 'use client';
 import { Ruler, ChevronRight, Scale, Thermometer, Globe, Zap, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
+import { useUnitPreference } from '@/lib/unit-context';
 
 const unitConverters = [
   { 
@@ -24,8 +25,16 @@ const unitConverters = [
 ];
 
 export default function UnitsPage() {
+  const { unit, setUnit } = useUnitPreference();
+
   return (
     <div className="max-w-4xl mx-auto px-4 pb-20">
+      <div className="flex justify-end mb-6">
+        <div className="inline-flex gap-2">
+          <button onClick={() => setUnit('metric')} className={`px-3 py-2 rounded-lg font-bold ${unit === 'metric' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700'}`}>Metric</button>
+          <button onClick={() => setUnit('imperial')} className={`px-3 py-2 rounded-lg font-bold ${unit === 'imperial' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700'}`}>Imperial</button>
+        </div>
+      </div>
       {/* Header */}
       <section className="mb-12 pt-6">
         <div className="flex items-center gap-3 mb-4">
