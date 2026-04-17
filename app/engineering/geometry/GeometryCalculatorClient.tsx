@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   Shapes, 
@@ -12,38 +12,96 @@ import {
   Box 
 } from 'lucide-react';
 
+import { convertUnits } from '@/lib/unit-logic';
+
 type ShapeType = 'circle' | 'rectangle' | 'triangle' | 'sphere' | 'cube' | 'cylinder';
 
 export default function GeometryCalculator() {
   const [shapeType, setShapeType] = useState<ShapeType>('circle');
+  const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
+  const prevUnitRef = useRef(unit);
   const [values, setValues] = useState({ a: 0, b: 0, c: 0, r: 0, h: 0 });
+
+  // convert when unit toggles so displayed numbers remain meaningful
+  useEffect(() => {
+    const prev = prevUnitRef.current;
+    if (prev !== unit) {
+      if (unit === 'imperial') {
+        setValues(v => ({
+          a: convertUnits(v.a, 'meter', 'ft', 'length'),
+          b: convertUnits(v.b, 'meter', 'ft', 'length'),
+          c: convertUnits(v.c, 'meter', 'ft', 'length'),
+          r: convertUnits(v.r, 'meter', 'ft', 'length'),
+          h: convertUnits(v.h, 'meter', 'ft', 'length'),
+        }));
+      } else {
+        setValues(v => ({
+          a: convertUnits(v.a, 'ft', 'meter', 'length'),
+          b: convertUnits(v.b, 'ft', 'meter', 'length'),
+          c: convertUnits(v.c, 'ft', 'meter', 'length'),
+          r: convertUnits(v.r, 'ft', 'meter', 'length'),
+          h: convertUnits(v.h, 'ft', 'meter', 'length'),
+        }));
+      }
+      prevUnitRef.current = unit;
+    }
+  }, [unit]);
 
   const results = useMemo(() => {
     const { a, b, c, r, h } = values;
-    
+
+    // Helper: interpret user-entered length value into meters for internal calculation
+    const toMeters = (v: number) => unit === 'metric' ? v : convertUnits(v, 'ft', 'meter', 'length');
+
+    // Compute using metric base (meters)
+    const r_m = toMeters(r);
+    const a_m = toMeters(a);
+    const b_m = toMeters(b);
+    const c_m = toMeters(c);
+    const h_m = toMeters(h);
+
     switch (shapeType) {
       case 'circle':
-        return { area: Math.PI * r * r, perimeter: 2 * Math.PI * r, label: 'Radius' };
+        return { area_m2: Math.PI * r_m * r_m, perimeter_m: 2 * Math.PI * r_m, label: 'Radius' };
       case 'rectangle':
-        return { area: a * b, perimeter: 2 * (a + b), label: 'Length × Width' };
+        return { area_m2: a_m * b_m, perimeter_m: 2 * (a_m + b_m), label: 'Length × Width' };
       case 'triangle':
-        const s = (a + b + c) / 2;
-        const area = a + b > c && a + c > b && b + c > a ? Math.sqrt(s * (s - a) * (s - b) * (s - c)) : 0;
-        return { area, perimeter: a + b + c, label: 'Sides (a, b, c)' };
+        const s = (a_m + b_m + c_m) / 2;
+        const area_m2 = a_m + b_m > c_m && a_m + c_m > b_m && b_m + c_m > a_m ? Math.sqrt(s * (s - a_m) * (s - b_m) * (s - c_m)) : 0;
+        return { area_m2, perimeter_m: a_m + b_m + c_m, label: 'Sides (a, b, c)' };
       case 'sphere':
-        return { area: 4 * Math.PI * r * r, volume: (4 / 3) * Math.PI * r * r * r, label: 'Radius' };
+        return { area_m2: 4 * Math.PI * r_m * r_m, volume_m3: (4 / 3) * Math.PI * r_m * r_m * r_m, label: 'Radius' };
       case 'cube':
-        return { area: 6 * a * a, volume: a * a * a, label: 'Side Length' };
+        return { area_m2: 6 * a_m * a_m, volume_m3: a_m * a_m * a_m, label: 'Side Length' };
       case 'cylinder':
-        return { area: 2 * Math.PI * r * (r + h), volume: Math.PI * r * r * h, label: 'Radius & Height' };
+        return { area_m2: 2 * Math.PI * r_m * (r_m + h_m), volume_m3: Math.PI * r_m * r_m * h_m, label: 'Radius & Height' };
     }
-  }, [shapeType, values]);
+  }, [shapeType, values, unit]);
 
   const handleInputChange = (key: string, value: number) => {
     setValues(prev => ({ ...prev, [key]: value }));
   };
 
   const format = (val: number) => val.toLocaleString(undefined, { maximumFractionDigits: 4 });
+
+  const m3ToFt3 = 35.3146667;
+
+  // Prepare display-ready values based on selected unit
+  const displayArea = ('area_m2' in results)
+    ? (unit === 'metric' ? (results as any).area_m2 : convertUnits((results as any).area_m2, 'square_meter', 'square_ft', 'area'))
+    : null;
+
+  const displayPerimeter = ('perimeter_m' in results)
+    ? (unit === 'metric' ? (results as any).perimeter_m : convertUnits((results as any).perimeter_m, 'meter', 'ft', 'length'))
+    : null;
+
+  const displayVolume = ('volume_m3' in results)
+    ? (unit === 'metric' ? (results as any).volume_m3 : (results as any).volume_m3 * m3ToFt3)
+    : null;
+
+  const areaUnitLabel = unit === 'metric' ? 'm²' : 'ft²';
+  const lengthUnitLabel = unit === 'metric' ? 'm' : 'ft';
+  const volumeUnitLabel = unit === 'metric' ? 'm³' : 'ft³';
 
   return (
     <div className="max-w-5xl mx-auto px-4 pb-20">
@@ -160,18 +218,18 @@ export default function GeometryCalculator() {
             </div>
             <div className="text-center md:text-left">
               <p className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-1 italic font-mono">// surface_area //</p>
-              <div className="text-4xl font-black">{format(results.area)}</div>
+              <div className="text-4xl font-black">{displayArea !== null ? `${format(displayArea)} ${areaUnitLabel}` : '-'}</div>
             </div>
-            {'volume' in results && (
+              {displayVolume !== null && (
               <div className="text-center md:text-left">
                 <p className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-1 italic font-mono">// volume //</p>
-                <div className="text-4xl font-black text-white">{format((results as any).volume)}</div>
+                  <div className="text-4xl font-black text-white">{displayVolume !== null ? `${format(displayVolume)} ${volumeUnitLabel}` : '-'}</div>
               </div>
             )}
-            {'perimeter' in results && (
+              {displayPerimeter !== null && (
               <div className="text-center md:text-left">
                 <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-1 italic font-mono">// perimeter //</p>
-                <div className="text-4xl font-black text-white">{format((results as any).perimeter)}</div>
+                  <div className="text-4xl font-black text-white">{displayPerimeter !== null ? `${format(displayPerimeter)} ${lengthUnitLabel}` : '-'}</div>
               </div>
             )}
           </div>
