@@ -3,6 +3,13 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 
+export const severityMultipliersTop: Record<string, number> = {
+  minor: 1.5,
+  moderate: 3.0,
+  severe: 5.0,
+  catastrophic: 7.5,
+};
+
 export default function SettlementCalculator() {
   const [injurySeverity, setInjurySeverity] = useState<'minor' | 'moderate' | 'severe' | 'catastrophic'>('moderate');
   const [medicalExpenses, setMedicalExpenses] = useState(15000);
@@ -13,16 +20,11 @@ export default function SettlementCalculator() {
   const [liabilityPercentage, setLiabilityPercentage] = useState(100);
   const [insuranceLimits, setInsuranceLimits] = useState(250000);
 
-  const severityMultipliers: Record<string, number> = {
-    minor: 1.5,
-    moderate: 3.0,
-    severe: 5.0,
-    catastrophic: 7.5,
-  };
+  
 
   const calculations = useMemo(() => {
     const totalEconomicDamages = medicalExpenses + lostWages + propertyDamage + futureMedical;
-    const baseMultiplier = severityMultipliers[injurySeverity];
+    const baseMultiplier = severityMultipliersTop[injurySeverity];
     const adjustedMultiplier = permanentImpairment ? baseMultiplier * 1.5 : baseMultiplier;
     const painAndSuffering = totalEconomicDamages * adjustedMultiplier;
     const totalClaimValue = totalEconomicDamages + painAndSuffering;
@@ -101,7 +103,7 @@ export default function SettlementCalculator() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">Injury Severity</label>
-                <select value={injurySeverity} onChange={(e) => setInjurySeverity(e.target.value as any)} className="w-full p-2 border rounded-md focus:ring-2 focus:ring-purple-500 outline-none">
+                <select value={injurySeverity} onChange={(e) => setInjurySeverity(e.target.value as 'minor' | 'moderate' | 'severe' | 'catastrophic')} className="w-full p-2 border rounded-md focus:ring-2 focus:ring-purple-500 outline-none">
                   <option value="minor">Minor (sprains, bruises, soft tissue)</option>
                   <option value="moderate">Moderate (fractures, simple surgery)</option>
                   <option value="severe">Severe (multiple surgeries, chronic pain)</option>

@@ -18,21 +18,24 @@ export default function BMICalculator() {
   useEffect(() => {
     const prev = prevUnitRef.current;
     if (prev !== unit) {
-      if (unit === 'imperial') {
-        // metric -> imperial
-        setWeightPounds(w => Math.round(convertUnits(weight, 'kg', 'lb', 'weight') * 100) / 100);
-        const totalIn = convertUnits(height / 100, 'meter', 'in', 'length');
-        setHeightFeet(Math.floor(totalIn / 12));
-        setHeightInches(Math.round(totalIn % 12));
-      } else {
-        // imperial -> metric
-        setWeight(w => Math.round(convertUnits(weightPounds, 'lb', 'kg', 'weight') * 100) / 100);
-        const totalIn = (heightFeet * 12) + heightInches;
-        setHeight(Math.round(convertUnits(totalIn, 'in', 'meter', 'length') * 100));
-      }
+      // Defer state updates slightly to avoid synchronous setState inside effect
+      setTimeout(() => {
+        if (unit === 'imperial') {
+          // metric -> imperial
+          setWeightPounds(Math.round(convertUnits(weight, 'kg', 'lb', 'weight') * 100) / 100);
+          const totalIn = convertUnits(height / 100, 'meter', 'in', 'length');
+          setHeightFeet(Math.floor(totalIn / 12));
+          setHeightInches(Math.round(totalIn % 12));
+        } else {
+          // imperial -> metric
+          setWeight(Math.round(convertUnits(weightPounds, 'lb', 'kg', 'weight') * 100) / 100);
+          const totalIn = (heightFeet * 12) + heightInches;
+          setHeight(Math.round(convertUnits(totalIn, 'in', 'meter', 'length') * 100));
+        }
+      }, 0);
       prevUnitRef.current = unit;
     }
-  }, [unit]);
+  }, [unit, weight, height, heightFeet, heightInches, weightPounds]);
 
   const bmi = useMemo(() => {
     if (unit === 'metric') {
@@ -137,7 +140,7 @@ export default function BMICalculator() {
         <div className="lg:col-span-7 flex flex-col gap-6">
           <div className={`${categoryInfo.bg} p-10 rounded-2xl border-4 ${categoryInfo.border} flex flex-col justify-center items-center text-center relative overflow-hidden`}>
              <div className="absolute top-0 right-0 p-4 opacity-5"><Heart size={150} /></div>
-             <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 font-mono">// calculated_index //</p>
+             <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 font-mono">{'// calculated_index //'}</p>
              <div className={`text-7xl font-black ${categoryInfo.color} mb-2`}>{bmi.toFixed(1)}</div>
              <div className={`text-2xl font-bold ${categoryInfo.color} uppercase tracking-tight`}>{categoryInfo.category}</div>
           </div>
@@ -183,7 +186,7 @@ export default function BMICalculator() {
 
         <div className="bg-slate-900 text-white p-8 rounded-3xl border border-slate-800">
            <h3 className="text-rose-500 font-bold mb-4 uppercase tracking-widest text-xs flex items-center gap-2 font-mono italic">
-             // calculation_formula_terminal //
+             {'// calculation_formula_terminal //'}
            </h3>
            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-[11px] font-mono tracking-tighter uppercase">
              <div className="bg-white/5 p-4 rounded-xl border border-white/10 italic leading-relaxed">Metric Protocol:<br/>Weight (kg) / [Height (m)]²</div>

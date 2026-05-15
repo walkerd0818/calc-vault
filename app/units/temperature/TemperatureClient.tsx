@@ -27,6 +27,18 @@ export default function TemperaturePage() {
         >
           Weight Converter
         </Link>
+        <Link 
+          href="/units/data" 
+          className="inline-block px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors font-medium"
+        >
+          Digital Storage
+        </Link>
+        <Link 
+          href="/units/cooking" 
+          className="inline-block px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors font-medium"
+        >
+          Cooking Converter
+        </Link>
       </nav>
 
       {/* Header */}

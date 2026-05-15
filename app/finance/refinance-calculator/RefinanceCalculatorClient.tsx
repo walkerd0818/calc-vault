@@ -20,25 +20,22 @@ export default function RefinanceCalculator() {
   const [closingCosts, setClosingCosts] = useState(3000);
 
   const originalPayment = useMemo(() => {
-    const monthlyRate = currentRate / 100 / 12;
-    const numberOfPayments = currentTerm * 12;
-    return (currentLoanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
-           (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+            const monthlyRate = currentRate / 100 / 12;
+            return (currentLoanAmount * monthlyRate * Math.pow(1 + monthlyRate, currentTerm * 12)) /
+              (Math.pow(1 + monthlyRate, currentTerm * 12) - 1);
   }, [currentLoanAmount, currentRate, currentTerm]);
 
   const remainingBalance = useMemo(() => {
-    const monthlyRate = currentRate / 100 / 12;
-    const numberOfPayments = currentTerm * 12;
-    const totalPayments = currentTerm * 12 - monthsPaid;
-    return (originalPayment * (Math.pow(1 + monthlyRate, totalPayments) - 1)) /
-           (monthlyRate * Math.pow(1 + monthlyRate, totalPayments));
+            const monthlyRate = currentRate / 100 / 12;
+            const totalPayments = currentTerm * 12 - monthsPaid;
+            return (originalPayment * (Math.pow(1 + monthlyRate, totalPayments) - 1)) /
+              (monthlyRate * Math.pow(1 + monthlyRate, totalPayments));
   }, [originalPayment, currentRate, currentTerm, monthsPaid]);
 
   const newPayment = useMemo(() => {
-    const monthlyRate = newRate / 100 / 12;
-    const numberOfPayments = newTerm * 12;
-    return (remainingBalance * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
-           (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+            const monthlyRate = newRate / 100 / 12;
+            return (remainingBalance * monthlyRate * Math.pow(1 + monthlyRate, newTerm * 12)) /
+              (Math.pow(1 + monthlyRate, newTerm * 12) - 1);
   }, [remainingBalance, newRate, newTerm]);
 
   const analysis = useMemo(() => {

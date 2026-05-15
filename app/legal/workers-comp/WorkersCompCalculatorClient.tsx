@@ -1,38 +1,38 @@
-'use client';
+"use client";
 
-import React, { useState, useMemo } from 'react';
-import Link from 'next/link';
-import { 
-  Briefcase, 
-  Info, 
-  ShieldAlert, 
-  Scale, 
-  FileText, 
+import React, { useState, useMemo } from "react";
+import Link from "next/link";
+import {
+  Briefcase,
+  ShieldAlert,
+  FileText,
   HelpCircle,
   Clock,
-  Stethoscope
-} from 'lucide-react';
+  Stethoscope,
+} from "lucide-react";
+
+export const scheduleMultipliersTop: Record<string, number> = {
+  arm: 312,
+  leg: 350,
+  hand: 342,
+  finger: 60,
+  other: 200,
+};
 
 export default function WorkersCompCalculator() {
   const [avgWeeklyWage, setAvgWeeklyWage] = useState(1500);
   const [disabilityType, setDisabilityType] = useState<'temporary' | 'permanent_partial' | 'permanent_total'>('temporary');
-  const [weeksDisabled, setWeeksDisabled] = useState(26);
+  const [weeksDisabled] = useState(26);
   const [impairmentRating, setImpairmentRating] = useState(15);
   const [bodyPart, setBodyPart] = useState<'arm' | 'leg' | 'hand' | 'finger' | 'other'>('arm');
   const [medicalTreatment, setMedicalTreatment] = useState(8000);
-  const [permanentState, setPermanentState] = useState('CA');
+  
 
   const benefitPercentage = 0.6667;
   const maxWeeklyBenefit = 1615.50; 
   const maxTemporaryWeeks = 104; 
 
-  const scheduleMultipliers: Record<string, number> = {
-    arm: 312,
-    leg: 350,
-    hand: 342,
-    finger: 60,
-    other: 200,
-  };
+  
 
   const calculations = useMemo(() => {
     let totalBenefit = 0;
@@ -47,9 +47,9 @@ export default function WorkersCompCalculator() {
         benefitType = 'Temporary Total Disability (TTD)';
         break;
       case 'permanent_partial':
-        weeklyBenefit = Math.min(avgWeeklyWage * benefitPercentage, maxWeeklyBenefit);
-        const weeks = scheduleMultipliers[bodyPart] * (impairmentRating / 100);
-        permanentDisabilityBenefit = weeklyBenefit * weeks;
+      weeklyBenefit = Math.min(avgWeeklyWage * benefitPercentage, maxWeeklyBenefit);
+      const weeks = scheduleMultipliersTop[bodyPart] * (impairmentRating / 100);
+      permanentDisabilityBenefit = weeklyBenefit * weeks;
         totalBenefit = permanentDisabilityBenefit;
         benefitType = 'Permanent Partial Disability (PPD)';
         break;
@@ -70,7 +70,7 @@ export default function WorkersCompCalculator() {
       estimatedWeeks: disabilityType === 'temporary' 
         ? Math.min(weeksDisabled, maxTemporaryWeeks)
         : disabilityType === 'permanent_partial'
-        ? (scheduleMultipliers[bodyPart] * (impairmentRating / 100)).toFixed(0)
+        ? (scheduleMultipliersTop[bodyPart] * (impairmentRating / 100)).toFixed(0)
         : 'Lifelong',
     };
   }, [avgWeeklyWage, disabilityType, weeksDisabled, impairmentRating, bodyPart, medicalTreatment]);
@@ -125,7 +125,7 @@ export default function WorkersCompCalculator() {
               </div>
               <div className="md:col-span-2">
                 <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Disability Classification</label>
-                <select value={disabilityType} onChange={(e) => setDisabilityType(e.target.value as any)} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-purple-500 outline-none transition-all font-medium bg-white">
+                <select value={disabilityType} onChange={(e) => setDisabilityType(e.target.value as 'temporary' | 'permanent_partial' | 'permanent_total')} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-purple-500 outline-none transition-all font-medium bg-white">
                   <option value="temporary">Temporary Total Disability (TTD)</option>
                   <option value="permanent_partial">Permanent Partial Disability (PPD)</option>
                   <option value="permanent_total">Permanent Total Disability (PTD)</option>
@@ -139,7 +139,7 @@ export default function WorkersCompCalculator() {
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Affected Body Part</label>
-                    <select value={bodyPart} onChange={(e) => setBodyPart(e.target.value as any)} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-purple-500 outline-none transition-all font-medium bg-white">
+                    <select value={bodyPart} onChange={(e) => setBodyPart(e.target.value as 'arm' | 'leg' | 'hand' | 'finger' | 'other')} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-purple-500 outline-none transition-all font-medium bg-white">
                       <option value="arm">Arm</option>
                       <option value="leg">Leg</option>
                       <option value="hand">Hand</option>

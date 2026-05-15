@@ -23,11 +23,12 @@ export function UnitProvider({ children }: { children: React.ReactNode }) {
         const stored = localStorage.getItem('calcvault_unit');
         if (stored === 'metric' || stored === 'imperial') return stored as UnitSystem;
 
-        const lang = navigator.language || (navigator as any).userLanguage || '';
+        const nav = navigator as Navigator & { userLanguage?: string };
+        const lang = nav.language || nav.userLanguage || '';
         // Default to imperial for en-US, else metric
         if (lang.startsWith('en-US')) return 'imperial';
       }
-    } catch (e) {
+    } catch {
       // ignore and fallback
     }
     return 'metric';
@@ -38,7 +39,7 @@ export function UnitProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     try {
       localStorage.setItem('calcvault_unit', unit);
-    } catch (e) {
+    } catch {
       // ignore storage errors
     }
   }, [unit]);

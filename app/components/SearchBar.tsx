@@ -7,7 +7,6 @@ import { AllCalculators, CalculatorMetadata } from '@/lib/registry';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<CalculatorMetadata[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
@@ -22,18 +21,21 @@ export default function SearchBar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Filter logic
-  useEffect(() => {
+  // Derive filtered results from query to avoid setting state inside effects
+  const results = React.useMemo(() => {
     if (query.length > 1) {
-      const filtered = AllCalculators.filter(calc =>
+      return AllCalculators.filter(calc =>
         calc.name.toLowerCase().includes(query.toLowerCase()) ||
         calc.keywords.some(k => k.toLowerCase().includes(query.toLowerCase()))
-      ).slice(0, 6); // Limit to top 6 results for UI cleanliness
-      setResults(filtered);
-      setIsOpen(true);
-    } else {
-      setResults([]);
-      setIsOpen(false);
+      ).slice(0, 6);
+    }
+    return [] as CalculatorMetadata[];
+  }, [query]);
+
+  useEffect(() => {
+    if (query.length <= 1) {
+      // defer to avoid calling setState synchronously inside effect
+      setTimeout(() => setIsOpen(false), 0);
     }
   }, [query]);
 
@@ -45,7 +47,7 @@ export default function SearchBar() {
         </div>
         <input
           type="text"
-          placeholder="Search 100+ calculators (e.g., 'mortgage' or 'miles')..."
+          placeholder="Search 100+ calculators (e.g., &apos;mortgage&apos; or &apos;miles&apos;)..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => query.length > 1 && setIsOpen(true)}
@@ -87,8 +89,8 @@ export default function SearchBar() {
       
       {isOpen && query.length > 1 && results.length === 0 && (
         <div className="absolute z-50 w-full mt-2 bg-white border border-slate-200 rounded-xl shadow-xl p-8 text-center">
-          <p className="text-slate-500">No calculator found for "{query}"</p>
-          <p className="text-xs text-slate-400 mt-1">Try searching for 'finance' or 'units'</p>
+          <p className="text-slate-500">No calculator found for &quot;{query}&quot;</p>
+          <p className="text-xs text-slate-400 mt-1">Try searching for &apos;finance&apos; or &apos;units&apos;</p>
         </div>
       )}
     </div>

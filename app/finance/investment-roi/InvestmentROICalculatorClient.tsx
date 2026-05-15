@@ -4,9 +4,7 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { 
   TrendingUp, 
-  Percent, 
   ShieldCheck, 
-  Info, 
   HelpCircle, 
   Briefcase, 
   Coins, 
@@ -20,10 +18,10 @@ export default function InvestmentROICalculator() {
   const [initialInvestment, setInitialInvestment] = useState(10000);
   const [currentValue, setCurrentValue] = useState(25000);
   const [holdingDays, setHoldingDays] = useState(180);
-  const [taxBracket, setTaxBracket] = useState(0.24);
-  const [capitalGainsType, setCapitalGainsType] = useState<CapitalGainsType>('longterm');
-  const [includeStateTax, setIncludeStateTax] = useState(false);
-  const [stateTaxRate, setStateTaxRate] = useState(0.05);
+  const [taxBracket] = useState(0.24);
+  const [capitalGainsType] = useState<CapitalGainsType>('longterm');
+  const [includeStateTax] = useState(false);
+  const [stateTaxRate] = useState(0.05);
 
   const calculations = useMemo(() => {
     const gain = currentValue - initialInvestment;
@@ -97,7 +95,7 @@ export default function InvestmentROICalculator() {
           <div className="space-y-5">
             <div>
               <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Asset Class</label>
-              <select value={investmentType} onChange={(e) => setInvestmentType(e.target.value as any)} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none transition-all font-medium bg-white">
+              <select value={investmentType} onChange={(e) => setInvestmentType(e.target.value as 'stock' | 'crypto' | 'general')} className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-blue-500 outline-none transition-all font-medium bg-white">
                 <option value="stock">Stock / ETF</option>
                 <option value="crypto">Cryptocurrency</option>
                 <option value="general">Real Estate / Other</option>

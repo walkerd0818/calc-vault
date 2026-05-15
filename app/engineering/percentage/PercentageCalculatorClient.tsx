@@ -4,7 +4,6 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { 
   Percent, 
-  ChevronLeft, 
   Info, 
   BookOpen, 
   ShoppingBag, 
@@ -177,7 +176,7 @@ export default function PercentageCalculator() {
               <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Calculation Type</label>
               <select 
                 value={calculationType}
-                onChange={(e) => setCalculationType(e.target.value as any)}
+                onChange={(e) => setCalculationType(e.target.value as 'basic' | 'discount' | 'markup' | 'increase' | 'decrease')}
                 className="w-full p-3 border-2 border-slate-100 rounded-xl focus:border-amber-500 outline-none transition-all font-medium bg-white"
               >
                 <option value="basic">Find Percentage of Amount</option>

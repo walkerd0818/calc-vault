@@ -8,7 +8,6 @@ import { calculateMortgage } from '@/lib/mortgage-logic';
 import AmortizationTable from '@components/AmortizationTable';
 import { 
   Calculator, 
-  Info, 
   BookOpen, 
   ShieldCheck, 
   BarChart3, 
