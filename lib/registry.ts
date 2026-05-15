@@ -126,4 +126,18 @@ export const AllCalculators: CalculatorMetadata[] = [
     href: '/legal/workers-comp',
     keywords: ['workers comp', 'disability', 'workers compensation', 'benefits', 'ttd', 'ppd', 'injury']
   },
+  {
+    id: 'storage',
+    name: 'Digital Storage Converter',
+    category: 'Units',
+    href: '/units/data',
+    keywords: ['storage', 'bytes', 'kb', 'mb', 'gib', 'kib', 'byte', 'bit']
+  },
+  {
+    id: 'cooking',
+    name: 'Cooking Unit Converter',
+    category: 'Units',
+    href: '/units/cooking',
+    keywords: ['cooking', 'teaspoon', 'tablespoon', 'cup', 'pint', 'quart', 'gallon', 'ml', 'liter']
+  },
 ];

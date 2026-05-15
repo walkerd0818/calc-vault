@@ -67,6 +67,42 @@ export default function CookingClient() {
         </div>
       </section>
 
+      <section className="prose prose-slate max-w-none mb-16 space-y-12 border-t pt-12 border-slate-100">
+        <h2 className="text-2xl font-bold text-slate-900">Quick Examples & FAQ</h2>
+        <div className="grid md:grid-cols-2 gap-8">
+          <div>
+            <h3 className="font-bold">Common Equivalencies</h3>
+            <ul className="list-disc ml-5 text-sm text-slate-600 mt-2">
+              <li>1 tablespoon = 3 teaspoons</li>
+              <li>1 fluid ounce = 2 tablespoons</li>
+              <li>1 cup = 8 fluid ounces</li>
+              <li>1 pint = 2 cups</li>
+              <li>1 quart = 2 pints</li>
+              <li>1 gallon = 4 quarts = 3,785.41 mL</li>
+            </ul>
+            <p className="text-xs text-slate-400 mt-3">Note: this converter uses US customary cooking measures (mL base). For precise baking, weigh ingredients when possible — volume can vary by packing and ingredient.</p>
+          </div>
+
+          <div>
+            <h3 className="font-bold">FAQ</h3>
+            <div className="space-y-2 text-sm text-slate-600 mt-2">
+              <div>
+                <strong>Q:</strong> Are these measurements US or metric?
+                <div><strong>A:</strong> The cooking converter maps US customary measures to metric (milliliters/liters) for accurate conversions.</div>
+              </div>
+              <div>
+                <strong>Q:</strong> Can I convert ingredient weights (grams, ounces)?
+                <div><strong>A:</strong> This tool focuses on volume units used in recipes. For ingredient-specific weight conversions (e.g., flour to grams), use the `Weight Converter` or consult ingredient density tables.</div>
+              </div>
+              <div>
+                <strong>Q:</strong> What about tablespoons with different regional meanings?
+                <div><strong>A:</strong> Tableware sizes can vary internationally; this converter uses the common US tablespoon (~14.79 mL).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <footer className="pt-8 border-t border-slate-100">
         <Link 
           href="/units" 
