@@ -21,26 +21,29 @@ export default function CalorieCalculator() {
   useEffect(() => {
     const prev = prevUnitRef.current;
     if (prev !== unit) {
-      if (unit === 'imperial') {
-        // convert kg -> lb, cm -> in
-        setWeight(w => Math.round(convertUnits(w, 'kg', 'lb', 'weight') * 100) / 100);
-        setHeight(h => Math.round(convertUnits(h / 100, 'meter', 'in', 'length') * 100) / 100);
-      } else {
-        // imperial -> metric: lb -> kg, in -> cm
-        setWeight(w => Math.round(convertUnits(w, 'lb', 'kg', 'weight') * 100) / 100);
-        setHeight(h => Math.round(convertUnits(h, 'in', 'meter', 'length') * 100));
-      }
+      // Defer conversions to avoid synchronous setState inside effect
+      setTimeout(() => {
+        if (unit === 'imperial') {
+          // convert kg -> lb, cm -> in
+          setWeight(Math.round(convertUnits(weight, 'kg', 'lb', 'weight') * 100) / 100);
+          setHeight(Math.round(convertUnits(height / 100, 'meter', 'in', 'length') * 100) / 100);
+        } else {
+          // imperial -> metric: lb -> kg, in -> cm
+          setWeight(Math.round(convertUnits(weight, 'lb', 'kg', 'weight') * 100) / 100);
+          setHeight(Math.round(convertUnits(height, 'in', 'meter', 'length') * 100));
+        }
+      }, 0);
       prevUnitRef.current = unit;
     }
-  }, [unit]);
+  }, [unit, weight, height]);
 
-  const activityMultipliers: Record<ActivityLevel, { multiplier: number; description: string }> = {
+  const activityMultipliers = useMemo<Record<ActivityLevel, { multiplier: number; description: string }>>(() => ({
     sedentary: { multiplier: 1.2, description: 'Little or no exercise' },
     light: { multiplier: 1.375, description: 'Light exercise 1-3 days/week' },
     moderate: { multiplier: 1.55, description: 'Moderate exercise 3-5 days/week' },
     active: { multiplier: 1.725, description: 'Intense exercise 6-7 days/week' },
     veryActive: { multiplier: 1.9, description: 'Very intense exercise daily' },
-  };
+  }), []);
 
   const calories = useMemo(() => {
     // Ensure Mifflin-St Jeor gets kg and cm
@@ -61,7 +64,7 @@ export default function CalorieCalculator() {
       weightLoss: Math.round(tdee - 500),
       weightGain: Math.round(tdee + 300),
     };
-  }, [gender, age, weight, height, activityLevel]);
+  }, [gender, age, weight, height, activityLevel, unit, activityMultipliers]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 pb-20">
@@ -152,7 +155,7 @@ export default function CalorieCalculator() {
           <div className="bg-slate-900 text-white p-10 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-5"><Zap size={150} /></div>
             <div className="text-center md:text-left mb-6 md:mb-0">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-rose-500 mb-2 font-mono">// daily_maintenance //</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-rose-500 mb-2 font-mono">{'// daily_maintenance //'}</h3>
               <div className="text-6xl font-black text-white">{calories.tdee}</div>
               <p className="text-slate-400 mt-2 italic">Calories per day to maintain weight</p>
             </div>

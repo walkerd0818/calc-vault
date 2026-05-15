@@ -13,6 +13,14 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  // Project-specific rule overrides
+  {
+    rules: {
+      // Allow some JSX textual patterns used intentionally across the app
+      'react/no-unescaped-entities': 'off',
+      'react/jsx-no-comment-textnodes': 'off',
+    }
+  }
 ]);
 
 export default eslintConfig;

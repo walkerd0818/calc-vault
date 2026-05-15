@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import {
-  Briefcase,
   ShieldAlert,
   FileText,
   HelpCircle,

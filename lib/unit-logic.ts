@@ -1,10 +1,10 @@
-export type UnitCategory = 'length' | 'weight' | 'temperature' | 'area';
+export type UnitCategory = 'length' | 'weight' | 'temperature' | 'area' | 'data' | 'cooking';
 
 export interface UnitDefinition {
   label: string;
   value: string;
   ratio?: number; // Multiply by this to get the base unit
-  formula?: (val: number, toBase: boolean) => number; // For non-linear like Temp
+  formula?: (val: number, _toBase: boolean) => number; // For non-linear like Temp
 }
 
 export const UnitRegistry: Record<UnitCategory, { base: string, units: UnitDefinition[] }> = {
@@ -30,7 +30,7 @@ export const UnitRegistry: Record<UnitCategory, { base: string, units: UnitDefin
   temperature: {
     base: 'celsius',
     units: [
-      { label: 'Celsius (°C)', value: 'celsius', formula: (v, toBase) => v },
+      { label: 'Celsius (°C)', value: 'celsius', formula: (v) => v },
       { label: 'Fahrenheit (°F)', value: 'fahrenheit', formula: (v, toBase) => toBase ? (v - 32) * 5/9 : (v * 9/5) + 32 },
       { label: 'Kelvin (K)', value: 'kelvin', formula: (v, toBase) => toBase ? v - 273.15 : v + 273.15 },
     ]
@@ -45,6 +45,37 @@ export const UnitRegistry: Record<UnitCategory, { base: string, units: UnitDefin
       { label: 'Square Miles (mi²)', value: 'square_mi', ratio: 2589988 },
       { label: 'Hectares (ha)', value: 'hectare', ratio: 10000 },
       { label: 'Acres (ac)', value: 'acre', ratio: 4046.86 },
+    ]
+  }
+  ,
+  data: {
+    base: 'byte',
+    units: [
+      { label: 'Bits (b)', value: 'bit', ratio: 1 / 8 },
+      { label: 'Bytes (B)', value: 'byte', ratio: 1 },
+      { label: 'Kilobytes (KB)', value: 'kb', ratio: 1000 },
+      { label: 'Kibibytes (KiB)', value: 'kib', ratio: 1024 },
+      { label: 'Megabytes (MB)', value: 'mb', ratio: 1000 * 1000 },
+      { label: 'Mebibytes (MiB)', value: 'mib', ratio: 1024 * 1024 },
+      { label: 'Gigabytes (GB)', value: 'gb', ratio: 1000 * 1000 * 1000 },
+      { label: 'Gibibytes (GiB)', value: 'gib', ratio: 1024 * 1024 * 1024 },
+      { label: 'Terabytes (TB)', value: 'tb', ratio: 1000 * 1000 * 1000 * 1000 },
+      { label: 'Tebibytes (TiB)', value: 'tib', ratio: 1024 * 1024 * 1024 * 1024 },
+    ]
+  }
+  ,
+  cooking: {
+    base: 'milliliter',
+    units: [
+      { label: 'Teaspoons (tsp)', value: 'tsp', ratio: 4.92892159375 },
+      { label: 'Tablespoons (tbsp)', value: 'tbsp', ratio: 14.78676478125 },
+      { label: 'Fluid Ounces (fl oz)', value: 'fl_oz', ratio: 29.5735295625 },
+      { label: 'Cups (cup)', value: 'cup', ratio: 236.5882365 },
+      { label: 'Pints (pt)', value: 'pt', ratio: 473.176473 },
+      { label: 'Quarts (qt)', value: 'qt', ratio: 946.352946 },
+      { label: 'Gallons (gal)', value: 'gal', ratio: 3785.411784 },
+      { label: 'Milliliters (mL)', value: 'ml', ratio: 1 },
+      { label: 'Liters (L)', value: 'l', ratio: 1000 },
     ]
   }
 };

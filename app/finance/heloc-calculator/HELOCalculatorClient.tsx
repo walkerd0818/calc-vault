@@ -4,7 +4,6 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { 
   Home, 
-  Wallet, 
   Info, 
   ShieldCheck, 
   HelpCircle, 
@@ -16,11 +15,11 @@ export default function HELOCCalculator() {
   const [homeValue, setHomeValue] = useState(500000);
   const [mortgageBalance, setMortgageBalance] = useState(300000);
   const [ltv, setLTV] = useState(80); 
-  const [helocAmount, setHelocAmount] = useState(100000);
-  const [interestRate, setInterestRate] = useState(8.5);
-  const [drawPeriodYears, setDrawPeriodYears] = useState(10);
-  const [repaymentYears, setRepaymentYears] = useState(20);
-  const [useAmount, setUseAmount] = useState(50000);
+  const [helocAmount] = useState(100000);
+  const [interestRate] = useState(8.5);
+  const [drawPeriodYears] = useState(10);
+  const [repaymentYears] = useState(20);
+  const [useAmount] = useState(50000);
 
   const calculations = useMemo(() => {
     const maxHomeEquity = homeValue - mortgageBalance;

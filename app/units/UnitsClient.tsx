@@ -22,6 +22,12 @@ const unitConverters = [
     icon: <Thermometer size={20} />,
     description: 'Instant scaling between Celsius, Fahrenheit, and Kelvin for weather or lab work.' 
   },
+  { 
+    name: 'Digital Storage', 
+    href: '/units/data', 
+    icon: <Zap size={20} />,
+    description: 'Convert between bits, bytes, KB/MB/GB and binary KiB/MiB/GiB units.' 
+  },
 ];
 
 export default function UnitsPage() {

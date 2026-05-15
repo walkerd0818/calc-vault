@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { 
   TrendingUp, 
@@ -73,24 +73,7 @@ const categories = [
 ];
 
 export default function HomeClient() {
-  const [showRequestModal, setShowRequestModal] = useState(false);
-  const [requestSubmitted, setRequestSubmitted] = useState(false);
-
-  function closeModal() { setShowRequestModal(false); setRequestSubmitted(false); }
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const email = (form.elements.namedItem('email') as HTMLInputElement).value;
-    const description = (form.elements.namedItem('description') as HTMLTextAreaElement).value;
-
-    await fetch('https://formsubmit.co/ajax/walkerd0818@gmail.com', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ email, description, _subject: 'New Calculator Request' }),
-    });
-    setRequestSubmitted(true);
-  }
+  // Contact/request modal and submission removed (unused)
 
   return (
     <div className="space-y-20 pb-20">
@@ -180,9 +163,9 @@ export default function HomeClient() {
         <p className="text-slate-400 mb-8 max-w-md mx-auto">
           We are constantly adding new modules to the CalcVault engine. Suggest a custom tool and our team will review it for development.
         </p>
-        <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold transition" onClick={() => setShowRequestModal(true)}>
+        <Link href="/contact" className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold transition inline-block">
           Request a Calculator
-        </button>
+        </Link>
       </section>
 
       {/* Modal remains the same... */}

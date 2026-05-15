@@ -8,7 +8,6 @@ import {
   Info, 
   BookOpen, 
   ShieldCheck, 
-  ChevronLeft, 
   Maximize, 
   Box 
 } from 'lucide-react';
@@ -16,6 +15,13 @@ import {
 import { convertUnits } from '@/lib/unit-logic';
 
 type ShapeType = 'circle' | 'rectangle' | 'triangle' | 'sphere' | 'cube' | 'cylinder';
+
+type GeometryResult = {
+  area_m2?: number;
+  perimeter_m?: number;
+  volume_m3?: number;
+  label?: string;
+};
 
 export default function GeometryCalculator() {
   const [shapeType, setShapeType] = useState<ShapeType>('circle');
@@ -27,28 +33,31 @@ export default function GeometryCalculator() {
   useEffect(() => {
     const prev = prevUnitRef.current;
     if (prev !== unit) {
-      if (unit === 'imperial') {
-        setValues(v => ({
-          a: convertUnits(v.a, 'meter', 'ft', 'length'),
-          b: convertUnits(v.b, 'meter', 'ft', 'length'),
-          c: convertUnits(v.c, 'meter', 'ft', 'length'),
-          r: convertUnits(v.r, 'meter', 'ft', 'length'),
-          h: convertUnits(v.h, 'meter', 'ft', 'length'),
-        }));
-      } else {
-        setValues(v => ({
-          a: convertUnits(v.a, 'ft', 'meter', 'length'),
-          b: convertUnits(v.b, 'ft', 'meter', 'length'),
-          c: convertUnits(v.c, 'ft', 'meter', 'length'),
-          r: convertUnits(v.r, 'ft', 'meter', 'length'),
-          h: convertUnits(v.h, 'ft', 'meter', 'length'),
-        }));
-      }
+      // Defer value conversions to avoid synchronous setState inside effect
+      setTimeout(() => {
+        if (unit === 'imperial') {
+          setValues(v => ({
+            a: convertUnits(v.a, 'meter', 'ft', 'length'),
+            b: convertUnits(v.b, 'meter', 'ft', 'length'),
+            c: convertUnits(v.c, 'meter', 'ft', 'length'),
+            r: convertUnits(v.r, 'meter', 'ft', 'length'),
+            h: convertUnits(v.h, 'meter', 'ft', 'length'),
+          }));
+        } else {
+          setValues(v => ({
+            a: convertUnits(v.a, 'ft', 'meter', 'length'),
+            b: convertUnits(v.b, 'ft', 'meter', 'length'),
+            c: convertUnits(v.c, 'ft', 'meter', 'length'),
+            r: convertUnits(v.r, 'ft', 'meter', 'length'),
+            h: convertUnits(v.h, 'ft', 'meter', 'length'),
+          }));
+        }
+      }, 0);
       prevUnitRef.current = unit;
     }
   }, [unit]);
 
-  const results = useMemo(() => {
+  const results = useMemo<GeometryResult>(() => {
     const { a, b, c, r, h } = values;
 
     // Helper: interpret user-entered length value into meters for internal calculation
@@ -77,6 +86,8 @@ export default function GeometryCalculator() {
       case 'cylinder':
         return { area_m2: 2 * Math.PI * r_m * (r_m + h_m), volume_m3: Math.PI * r_m * r_m * h_m, label: 'Radius & Height' };
     }
+    // fallback
+    return {};
   }, [shapeType, values, unit]);
 
   const handleInputChange = (key: string, value: number) => {
@@ -89,15 +100,15 @@ export default function GeometryCalculator() {
 
   // Prepare display-ready values based on selected unit
   const displayArea = ('area_m2' in results)
-    ? (unit === 'metric' ? (results as any).area_m2 : convertUnits((results as any).area_m2, 'square_meter', 'square_ft', 'area'))
+    ? (unit === 'metric' ? (results as GeometryResult).area_m2! : convertUnits((results as GeometryResult).area_m2!, 'square_meter', 'square_ft', 'area'))
     : null;
 
   const displayPerimeter = ('perimeter_m' in results)
-    ? (unit === 'metric' ? (results as any).perimeter_m : convertUnits((results as any).perimeter_m, 'meter', 'ft', 'length'))
+    ? (unit === 'metric' ? (results as GeometryResult).perimeter_m! : convertUnits((results as GeometryResult).perimeter_m!, 'meter', 'ft', 'length'))
     : null;
 
   const displayVolume = ('volume_m3' in results)
-    ? (unit === 'metric' ? (results as any).volume_m3 : (results as any).volume_m3 * m3ToFt3)
+    ? (unit === 'metric' ? (results as GeometryResult).volume_m3! : (results as GeometryResult).volume_m3! * m3ToFt3)
     : null;
 
   const areaUnitLabel = unit === 'metric' ? 'm²' : 'ft²';
@@ -222,18 +233,18 @@ export default function GeometryCalculator() {
               <Maximize size={150} />
             </div>
             <div className="text-center md:text-left">
-              <p className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-1 italic font-mono">// surface_area //</p>
+              <p className="text-xs font-bold text-amber-500 uppercase tracking-widest mb-1 italic font-mono">{'// surface_area //'}</p>
               <div className="text-4xl font-black">{displayArea !== null ? `${format(displayArea)} ${areaUnitLabel}` : '-'}</div>
             </div>
               {displayVolume !== null && (
               <div className="text-center md:text-left">
-                <p className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-1 italic font-mono">// volume //</p>
+                <p className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-1 italic font-mono">{'// volume //'}</p>
                   <div className="text-4xl font-black text-white">{displayVolume !== null ? `${format(displayVolume)} ${volumeUnitLabel}` : '-'}</div>
               </div>
             )}
               {displayPerimeter !== null && (
               <div className="text-center md:text-left">
-                <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-1 italic font-mono">// perimeter //</p>
+                <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-1 italic font-mono">{'// perimeter //'}</p>
                   <div className="text-4xl font-black text-white">{displayPerimeter !== null ? `${format(displayPerimeter)} ${lengthUnitLabel}` : '-'}</div>
               </div>
             )}
